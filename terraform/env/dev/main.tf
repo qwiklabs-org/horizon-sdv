@@ -43,13 +43,6 @@ module "base" {
     "user:marta.kania@accenture.com",
     "user:lukasz.domke@accenture.com",
   ]
-  sdv_bastion_host_bash_command = <<EOT
-    gcloud info
-    sudo apt update && sudo apt upgrade -y
-    touch ~/terraform-log.log
-    echo $(date) >> ~/terraform-log.log
-    cat ~/terraform-log.log
-  EOT
 
   sdv_network_egress_router_name = "sdv-egress-internet"
 
@@ -236,19 +229,14 @@ module "base" {
         }
       ]
     }
-    # GCP secret name: mtkc-regcred
-    # WI to GKE at ns/mtk-connect/sa/mtk-connect-sa.
-    s9 = {
-      secret_id        = "mtkc-regcred"
-      value            = var.sdv_gh_mtkc_regcred
-      use_github_value = true
-      gke_access = [
-        {
-          ns = "mtk-connect"
-          sa = "mtk-connect-sa"
-        }
-      ]
-    }
-
   }
+
+  sdv_bastion_host_files_to_copy = [
+    "../../bash-scripts/horizon-stage-01.sh"
+  ]
+  sdv_bastion_host_destination_dir = "~/."
+  sdv_bastion_host_bash_command    = <<EOT
+    chmod +x ~/horizon-stage-01.sh
+    ~/horizon-stage-01.sh
+  EOT
 }
