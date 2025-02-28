@@ -19,4 +19,4 @@ configs:
   secret:
     createSecret: false
 global:
-  domain: dev.horizon-sdv.com
+  domain: ##SUBDOMAIN##.##DOMAIN##
