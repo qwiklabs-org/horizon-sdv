@@ -35,7 +35,6 @@ source "$(dirname "${BASH_SOURCE[0]}")"/cvd_environment.sh "$0"
 declare BOOTED_INSTANCES=0
 
 # CVD log file.
-WORKSPACE="${WORKSPACE:-.}"
 declare -r logfile="${WORKSPACE}"/cvd-"${BUILD_NUMBER}".log
 
 # Download CVD host package and Cuttlefish AVD artifacts

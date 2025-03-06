@@ -89,13 +89,27 @@ Keep an eye out in the console logs for `deprecated` and update as required.
 
 MTK Connect requires NodeJS; this option allows you to update the version to install on the instance template.
 
-### DELETE
+### `DELETE`
 
 Allows deletion of an existing instance templates and its referenced image.
 
 If deleting a standard instance template (i.e. name auto-generated), simply define the version in `ANDROID_CUTTLEFISH_REVISION` and the required names will be derived automatically.
 
 If user is deleting a uniquely-created instance template (i.e. name specified by `CUTTLEFISH_INSTANCE_UNIQUE_NAME`), then define `CUTTLEFISH_INSTANCE_UNIQUE_NAME` as was used to create it (i.e. the same name as the instance template with the "instance-template" prefix removed).
+
+### `VM_INSTANCE_CREATE`
+
+**Enable Stopped VM Instance Creation**
+
+If enabled, this job will create a Cuttlefish VM instance from the final instance template. It will be placed in stop
+state after creation.
+
+This would allow developers to:
+- Start the instance via the bastion host
+- Connect to the instance directly
+- Run tests on the instance manually, bypassing Jenkins
+
+**Important:** Be aware that creating this instance may incur additional costs for your project.
 
 ## SYSTEM VARIABLES <a name="system-variables"></a>
 

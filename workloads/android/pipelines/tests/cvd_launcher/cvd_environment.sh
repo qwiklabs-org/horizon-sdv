@@ -44,6 +44,8 @@ VM_CPUS=${VM_CPUS:-8}
 VM_MEMORY_MB=$(echo "${VM_MEMORY_MB}" | xargs)
 VM_MEMORY_MB=${VM_MEMORY_MB:-16384}
 
+WORKSPACE=${WORKSPACE:-$(pwd)}
+
 # Show variables.
 VARIABLES="Environment:"
 
