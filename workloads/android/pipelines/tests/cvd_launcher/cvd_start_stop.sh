@@ -131,7 +131,8 @@ function cuttlefish_adb_restart() {
 # Ensure CVD is terminated.
 function cuttlefish_cleanup() {
     cd "${HOME}" || exit
-    killall run_cvd launch_cvd > /dev/null 2>&1
+    # SIGKILL rather than SIGTERM
+    killall -9 run_cvd launch_cvd > /dev/null 2>&1
     rm -rf "${HOME}"/cf > /dev/null 2>&1
 }
 
@@ -139,6 +140,7 @@ function cuttlefish_cleanup() {
 function cuttlefish_stop() {
     cd "${HOME}"/cf || exit
     adb reboot
+    sudo adb kill-server || true
     HOME="${HOME}/cf" ./bin/stop_cvd
 }
 
