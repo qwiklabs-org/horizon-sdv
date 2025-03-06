@@ -120,7 +120,11 @@ if [[ -n "${GERRIT_PROJECT}" && -n "${GERRIT_CHANGE_NUMBER}" && -n "${GERRIT_PAT
     REPO_CMD="cd ${PROJECT_PATH} && git fetch ${PROJECT_URL} ${FETCHED_REFS} && git cherry-pick FETCH_HEAD && cd -"
 
     echo "Running: ${REPO_CMD}"
-    eval "${REPO_CMD}"
+    if ! eval "${REPO_CMD}"
+    then
+        echo "ERROR: git fetch failed, exit!"
+        exit 1
+    fi
 fi
 
 # Additional commands to run after repo sync.
