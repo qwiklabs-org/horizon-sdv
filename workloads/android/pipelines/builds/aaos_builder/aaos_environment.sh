@@ -147,6 +147,26 @@ if [ -d "${AAOS_CACHE_DIRECTORY}" ]; then
     # Retain the official cache directories.
     find "${AAOS_CACHE_DIRECTORY}" -mindepth 1 -maxdepth 1 -type d ! -name "${AAOS_BUILDS_DIRECTORY}" ! -name \
         "${AAOS_BUILDS_RPI_DIRECTORY}" ! -name 'lost+found' -exec rm -rf {} + || true
+
+    # Remove oldest target directory if disk usage is greater than 92%
+    # Builds consume ~6% of disk space.
+    while true; do
+        USED_PERCENTAGE=$(df "${AAOS_CACHE_DIRECTORY}" | tail -1 | awk '{print ($3/$2)*100}' | cut -d '.' -f 1)
+        if [ "${USED_PERCENTAGE}" -lt 92 ]; then
+            break
+        fi
+        USAGE=$(df -h "${AAOS_CACHE_DIRECTORY}" | tail -1 | awk '{print "Used " $3 " of " $2}')
+        echo "WARNING: Insufficient disk space - ${USED_PERCENTAGE}% (${USAGE})"
+
+        # List the oldest target directory
+        OLDEST_DIR=$(find "${AAOS_CACHE_DIRECTORY}"/aaos_builds* -mindepth 1 -maxdepth 1 -type d -name 'out_sdv*' -exec ls -drt {} + | head -1)
+        if [ -z "${OLDEST_DIR}" ]; then
+            echo "No further target directories to clean up."
+            break
+        fi
+        echo "WARNING: Removing ${OLDEST_DIR} ..."
+        find "${OLDEST_DIR}" -delete
+    done
 else
     # Local build or no PVC mounted, build in user home.
     AAOS_CACHE_DIRECTORY="${HOME}"
