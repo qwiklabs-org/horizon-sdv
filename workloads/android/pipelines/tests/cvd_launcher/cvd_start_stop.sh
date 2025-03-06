@@ -136,6 +136,12 @@ function cuttlefish_cleanup() {
     rm -rf "${HOME}"/cf > /dev/null 2>&1
 }
 
+function cuttlefish_nuclear() {
+    # dnsmasq process can remain and block a new start. Kill all CVD.
+    # Brute force so we can stop/start repeatedly on the same instance.
+    pkill -9 -f cvd
+}
+
 # Stop CVD.
 function cuttlefish_stop() {
     cd "${HOME}"/cf || exit
@@ -156,6 +162,7 @@ case "${1}" in
         cuttlefish_archive_logs
         cuttlefish_stop
         cuttlefish_cleanup
+        cuttlefish_nuclear
         ;;
     --start|*)
         # Start
