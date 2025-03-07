@@ -4,6 +4,7 @@
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Environment Variables/Parameters](#environment-variables)
+- [Example Usage](#examples)
 - [System Variables](#system-variables)
 
 ## Introduction <a name="introduction"></a>
@@ -118,6 +119,21 @@ If wishing to debug HOST using MTK Connect, Cuttlefish VM instance must be allow
 minutes, gives the tester time to keep the instance alive so they may work with the host via MTK Connect.
 
 It is only applicable when `MTK_CONNECT_ENABLE` is enabled.
+
+## Example Usage <a name="examples"></a>
+
+Refer to `workloads/android/pipelines/tests/cvd_launcher/README.md` for an example of how to create and set up a test instance and boot the Cuttlfish Virtual Devices. Once the devices are booted, CTS tests can be run as follows:
+
+
+```
+ANDROID_VERSION=14 \
+./workloads/android/pipelines/tests/cts_execution/cts_initialise.sh
+CTS_TESTPLAN="cts-virtual-device-stable" \
+CTS_MODULE="CtsHostsideNumberBlockingTestCases" \
+CTS_TIMEOUT=240 \
+SHARD_COUNT=1 \
+./workloads/android/pipelines/tests/cts_execution/cts_execution.sh
+```
 
 ## SYSTEM VARIABLES <a name="system-variables"></a>
 

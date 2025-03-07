@@ -4,6 +4,7 @@
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Environment Variables/Parameters](#environment-variables)
+- [Example Usage](#examples)
 - [System Variables](#system-variables)
 
 ## Introduction <a name="introduction"></a>
@@ -79,6 +80,8 @@ A boot disk is required to create the instance, therefore define the size of dis
 
 VM instances are expensive so it is advisable to define the maximum amount of time to run the instance before it will automatically be terminated. This avoids leaving expensive instances in running state and consuming resources.
 
+User may disable by setting the value to 0, but they must be aware of any costs that they may incur to their project.  Setting to 0 is useful when creating development test instances so users can connect directly to the VM instance.
+
 ### `DEBIAN_OS_VERSION`
 
 Override the OS version. These regularly become deprecated and superceded, hence option to update to newer version.
@@ -95,21 +98,49 @@ Allows deletion of an existing instance templates and its referenced image.
 
 If deleting a standard instance template (i.e. name auto-generated), simply define the version in `ANDROID_CUTTLEFISH_REVISION` and the required names will be derived automatically.
 
+- `ANDROID_CUTTLEFISH_REVISION`: choose the version you wish to delete
+- `DELETE`: This ensures the instance template, disk image and VM instance are deleted.
+- `Build` : trigger build to delete all artifacts.
+
 If user is deleting a uniquely-created instance template (i.e. name specified by `CUTTLEFISH_INSTANCE_UNIQUE_NAME`), then define `CUTTLEFISH_INSTANCE_UNIQUE_NAME` as was used to create it (i.e. the same name as the instance template with the "instance-template" prefix removed).
+
+- `CUTTLEFISH_INSTANCE_UNIQUE_NAME`: choose the template unique name you wish to delete
+- `DELETE`: This ensures the instance template, disk image and VM instance are deleted.
+- `Build` : trigger build to delete all artifacts.
 
 ### `VM_INSTANCE_CREATE`
 
 **Enable Stopped VM Instance Creation**
 
 If enabled, this job will create a Cuttlefish VM instance from the final instance template. It will be placed in stop
-state after creation.
+state after creation. This is provided for development testing and debugging.
 
 This would allow developers to:
 - Start the instance via the bastion host
 - Connect to the instance directly
 - Run tests on the instance manually, bypassing Jenkins
 
-**Important:** Be aware that creating this instance may incur additional costs for your project.
+**Important:**
+- Be aware that creating this instance may incur additional costs for your project.
+- Enable this only for instance templates created for developement purposes that are created with a well defined `CUTTLEFISH_INSTANCE_UNIQUE_NAME`.
+- Set `MAX_RUN_DURATION` to 0 to ensure VM instance is never deleted on runtime expiry.
+- It is advisable to `DELETE` these development instances when testing is completed.
+
+## Example Usage <a name="examples"></a>
+
+If user wishes to create a temporary test instance to work with, then they can do so as follows:
+
+- `ANDROID_CUTTLEFISH_REVISION`: choose the version you wish to build the template from
+- `CUTTLEFISH_INSTANCE_UNIQUE_NAME` : provide a unique name, starting with cuttlefish-vm, e.g. `cuttlefish-vm-test-instance-v110.`
+- `MAX_RUN_DURATION` : set to 0 to avoid instance being deleted after this time.
+- `VM_INSTANCE_CREATE` : Enable this option so that the instance template will create a VM instance for user to start, connect to and work with.
+- `Build`
+
+Once they have finished with the instances, they should delete to avoid excessive costs.
+
+- `CUTTLEFISH_INSTANCE_UNIQUE_NAME` : provide a unique name, starting with cuttlefish-vm, e.g. `cuttlefish-vm-test-instance-v110.`
+- `DELETE` : This ensures the instance template, disk image and VM instance are deleted.
+- `Build`
 
 ## SYSTEM VARIABLES <a name="system-variables"></a>
 

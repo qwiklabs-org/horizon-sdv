@@ -125,7 +125,7 @@ function cuttlefish_adb_restart() {
     sudo adb start-server || true
     sleep 60
     BOOTED_INSTANCES=$(adb devices | grep -c -E '0.+device$')
-    echo "    Booted ${BOOTED_INSTANCES} instances of ${NUM_INSTANCES}"
+    echo "    Booted ${BOOTED_INSTANCES} instances of ${NUM_INSTANCES} post adb restart."
 }
 
 # Ensure CVD is terminated.
@@ -139,7 +139,7 @@ function cuttlefish_cleanup() {
 function cuttlefish_nuclear() {
     # dnsmasq process can remain and block a new start. Kill all CVD.
     # Brute force so we can stop/start repeatedly on the same instance.
-    pkill -9 -f cvd
+    sudo pkill -9 -f cvd
 }
 
 # Stop CVD.

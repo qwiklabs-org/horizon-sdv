@@ -132,6 +132,15 @@ declare -r vm_cuttlefish_image=image-"${cuttlefish_unique_name}"
 declare -r vm_cuttlefish_instance_template=instance-template-"${cuttlefish_unique_name}"
 declare -r vm_cuttlefish_instance="${cuttlefish_unique_name}"
 
+# This timeout was just a coverall for GCE issues that have since been resolved
+# in Jenkins. But if creating a VM instance from the template, it is best not to set
+# because the VM instance would have been deleted after the duration.
+# 0 indicates not to limit run duration.
+declare max_run_duration_args=""
+if [ "${MAX_RUN_DURATION}" != '0' ]; then
+    max_run_duration_args="--max-run-duration=${MAX_RUN_DURATION} --instance-termination-action=delete"
+fi
+
 # Colours for logging.
 if [ -z "${WORKSPACE}" ]; then
     GREEN='\033[0;32m'
@@ -239,14 +248,13 @@ function check_environment() {
 function create_base_template_instance() {
     echo_formatted "1. Create base template"
     yes Y | gcloud compute instance-templates delete "${vm_base_instance_template}" >/dev/null 2>&1 || true
+    # shellcheck disable=SC2086
     gcloud compute instance-templates create "${vm_base_instance_template}" \
         --description="Instance template: ${vm_base_instance_template}" \
         --shielded-integrity-monitoring \
         --key-revocation-action-type=none \
         --service-account="${SERVICE_ACCOUNT}" \
         --machine-type="${MACHINE_TYPE}" \
-        --max-run-duration="${MAX_RUN_DURATION}" \
-        --instance-termination-action=delete \
         --image-project=debian-cloud \
         --create-disk=mode=rw,architecture=X86_64,boot=yes,size="${BOOT_DISK_SIZE}",auto-delete=true,type=pd-balanced,device-name="${vm_base_instance}",image=projects/debian-cloud/global/images/"${DEBIAN_OS_VERSION}",interface=SCSI \
         --tags=http-server,https-server \
@@ -254,7 +262,8 @@ function create_base_template_instance() {
         --reservation-affinity=any \
         --enable-nested-virtualization \
         --region="${REGION}" \
-        --network-interface=network="${NETWORK}",subnet="${SUBNET}",stack-type=IPV4_ONLY,no-address >/dev/null 2>&1 &
+        --network-interface=network="${NETWORK}",subnet="${SUBNET}",stack-type=IPV4_ONLY,no-address \
+        ${max_run_duration_args} >/dev/null 2>&1 &
     progress_spinner "$!"
     echo -e "${ORANGE}Instance template ${vm_base_instance_template} created${NC}"
 }
@@ -399,6 +408,7 @@ function create_cuttlefish_boilerplate_template() {
     echo -e "${ORANGE}Sleep for 1 minute while instance template deletion completes${NC}"
     sleep 60
 
+    # shellcheck disable=SC2086
     gcloud compute instance-templates create "${vm_cuttlefish_instance_template}" \
         --description="${vm_cuttlefish_instance_template}" \
         --shielded-integrity-monitoring \
@@ -406,14 +416,13 @@ function create_cuttlefish_boilerplate_template() {
         --service-account="${SERVICE_ACCOUNT}" \
         --machine-type="${MACHINE_TYPE}" \
         --image-project=debian-cloud \
-        --max-run-duration="${MAX_RUN_DURATION}" \
-        --instance-termination-action=delete \
         --create-disk=image="${vm_cuttlefish_image}",boot=yes,auto-delete=yes,type=pd-balanced \
         --metadata=enable-oslogin=true \
         --reservation-affinity=any \
         --enable-nested-virtualization \
         --region="${REGION}" \
-        --network-interface network="${NETWORK}",subnet="${SUBNET}",stack-type=IPV4_ONLY,no-address &
+        --network-interface network="${NETWORK}",subnet="${SUBNET}",stack-type=IPV4_ONLY,no-address \
+        ${max_run_duration_args} &
     progress_spinner "$!"
 
     echo -e "${ORANGE}Sleep for 4 minute while instance template creation completes, GCP settles.${NC}"
@@ -463,24 +472,31 @@ function delete_instances() {
 
     yes Y | gcloud compute instance-templates delete "${vm_base_instance_template}" >/dev/null 2>&1 || true &
     progress_spinner "$!"
+    echo_formatted "   Deleted ${vm_base_instance_template}"
 
     yes Y | gcloud compute instance-templates delete "${vm_cuttlefish_instance_template}" >/dev/null 2>&1 || true &
     progress_spinner "$!"
+    echo_formatted "   Deleted ${vm_cuttlefish_instance_template}"
 
     yes Y | gcloud compute images delete "${vm_cuttlefish_image}" >/dev/null 2>&1 || true &
     progress_spinner "$!"
+    echo_formatted "   Deleted ${vm_cuttlefish_image}"
 
     gcloud compute instances stop "${vm_base_instance}" --zone="${ZONE}" >/dev/null 2>&1 || true &
     progress_spinner "$!"
+    echo_formatted "   Stopped ${vm_base_instance}"
 
     yes Y | gcloud compute instances delete "${vm_base_instance}" --zone="${ZONE}" >/dev/null 2>&1 || true &
     progress_spinner "$!"
+    echo_formatted "   Deleted ${vm_base_instance}"
 
     gcloud compute instances stop "${vm_cuttlefish_instance}" --zone="${ZONE}" >/dev/null 2>&1 || true &
     progress_spinner "$!"
+    echo_formatted "   Stopped ${vm_cuttlefish_instance}"
 
     yes Y | gcloud compute instances delete "${vm_cuttlefish_instance}" --zone="${ZONE}" >/dev/null 2>&1 || true &
     progress_spinner "$!"
+    echo_formatted "   Deleted ${vm_cuttlefish_instance}"
 }
 
 # Main: run all or allow the user to select which steps to run.

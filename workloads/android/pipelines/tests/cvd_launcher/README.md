@@ -4,6 +4,7 @@
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Environment Variables/Parameters](#environment-variables)
+- [Example Usage](#examples)
 - [System Variables](#system-variables)
 
 ## Introduction <a name="introduction"></a>
@@ -75,6 +76,50 @@ This applies to CVD `cpus` parameter.
 Defines total memory available to guest.
 
 This applies to CVD `memory_mb` parameter.
+
+## Example Usage <a name="examples"></a>
+
+The following examples show how the scripts may be used standalone on a test instance.
+
+From `Workloads/Android/Environment/CF Instance Template` create a Cuttlefish test instance:
+
+- `ANDROID_CUTTLEFISH_REVISION`: choose the version you wish to build the template from
+- `CUTTLEFISH_INSTANCE_UNIQUE_NAME` : provide a unique name, starting with cuttlefish-vm, e.g. `cuttlefish-vm-test-instance-v110.`
+- `MAX_RUN_DURATION` : set to 0 to avoid instance being deleted after this time.
+- `VM_INSTANCE_CREATE` : Enable this option so that the instance template will create a VM instance for user to start, connect to and work with.
+
+Connect to the instance, e.g.
+
+```
+# SSH to bastion host
+gcloud compute ssh --zone "europe-west1-d" "sdv-bastion-host" --tunnel-through-iap --project "sdva-2108202401"
+# Set up credentials to connect to the VM instance
+gcloud container clusters get-credentials sdv-cluster --region europe-west1 --internal-ip
+# Start the instance
+gcloud compute instances start cuttlefish-vm-test-instance-v110 --zone=europe-west1-d
+# Connect to the instance
+gcloud compute ssh --zone "europe-west1-d" "cuttlefish-vm-test-instance-v110" --tunnel-through-iap --project "sdva-2108202401"
+```
+
+After that user can clone the workloads repository on the instance and run CVD Launcher scripts as follows:
+```
+CUTTLEFISH_DOWNLOAD_URL="gs://sdva-2108202401-aaos/Android/Builds/AAOS_Builder/10/" \
+CUTTLEFISH_MAX_BOOT_TIME=420 \
+NUM_INSTANCES=1 \
+VM_CPUS=16 \
+VM_MEMORY_MB="16384" \
+./workloads/android/pipelines/tests/cvd_launcher/cvd_start_stop.sh --start
+```
+
+When testing is complete, it is advisable to stop the instance, e.g.
+`gcloud compute instances stop cuttlefish-vm-test-instance-v110 --zone=europe-west1-d`
+
+When entirely finished with the instance, delete it. e.g.
+
+From `Workloads/Android/Environment/CF Instance Template` delete the Cuttlefish test instance:
+
+- `CUTTLEFISH_INSTANCE_UNIQUE_NAME` : provide a unique name, starting with cuttlefish-vm, e.g. `cuttlefish-vm-test-instance-v110.`
+- `DELETE` : This ensures the instance template, disk image and VM instance are deleted.
 
 ## SYSTEM VARIABLES <a name="system-variables"></a>
 
