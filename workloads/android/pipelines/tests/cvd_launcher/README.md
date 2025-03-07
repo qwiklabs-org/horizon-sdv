@@ -49,7 +49,7 @@ URL is of the form `gs://<ANDROID_BUILD_BUCKET_ROOT_NAME>/Android/Builds/AAOS_Bu
 
 ### `CUTTLEFISH_MAX_BOOT_TIME`
 
-Cuttlefish virtual devices need time to boot up. This defines the maximum time to wait for the virtual device to boot up.
+Cuttlefish virtual devices need time to boot up. This defines the maximum time to wait for the virtual device(s) to boot up. Cuttlefish virtual devices can take a serious amount of time before booting, hence this is quite large.
 
 Time is in seconds.
 
