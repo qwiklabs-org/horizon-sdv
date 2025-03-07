@@ -90,7 +90,7 @@ pipeline {
            Reference: <a href="https://cloud.google.com/sdk/gcloud/reference/compute/instances/create" target="_blank">gcloud compute instances create</a>, i.e. <i>--max-run-duration=MAX_RUN_DURATION</i></p>''')
 
     string(name: 'DEBIAN_OS_VERSION',
-           defaultValue: 'debian-12-bookworm-v20250113',
+           defaultValue: 'debian-12-bookworm-v20250212',
            description: '''<p>Disk image OS version.<br/>
            Reference: <a href="https://cloud.google.com/sdk/gcloud/reference/compute/instance-templates/create" target="_blank">gcloud compute instance-templates create</a>, i.e. <i>--create-disk</i></p>''')
 

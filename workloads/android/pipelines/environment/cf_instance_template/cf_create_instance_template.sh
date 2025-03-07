@@ -35,7 +35,7 @@
 #  - CUTTLEFISH_REVISION: the branch/tag version of Android Cuttlefish
 #        to use. Default: main
 #  - BOOT_DISK_SIZE: Disk image size in GB. Default: 200GB
-#  - DEBIAN_OS_VERSION: Default: debian-12-bookworm-v20250113}
+#  - DEBIAN_OS_VERSION: Default: debian-12-bookworm-v20250212}
 #  - JENKINS_NAMESPACE: k8s namespace. Default: jenkins
 #  - JENKINS_PRIVATE_SSH_KEY_NAME: SSH key name to extract public key from
 #        Private key would be created similar to:
@@ -101,7 +101,7 @@ CUTTLEFISH_REVISION=${CUTTLEFISH_REVISION:-main}
 CUTTLEFISH_REVISION=$(echo "${CUTTLEFISH_REVISION}" | xargs)
 BOOT_DISK_SIZE=${BOOT_DISK_SIZE:-200GB}
 BOOT_DISK_SIZE=$(echo "${BOOT_DISK_SIZE}" | awk '{print toupper($0)}' | xargs)
-DEBIAN_OS_VERSION=${DEBIAN_OS_VERSION:-debian-12-bookworm-v20250113}
+DEBIAN_OS_VERSION=${DEBIAN_OS_VERSION:-debian-12-bookworm-v20250212}
 DEBIAN_OS_VERSION=$(echo "${DEBIAN_OS_VERSION}" | xargs)
 JENKINS_NAMESPACE=${JENKINS_NAMESPACE:-jenkins}
 JENKINS_PRIVATE_SSH_KEY_NAME=${JENKINS_PRIVATE_SSH_KEY_NAME:-jenkins-cuttlefish-vm-ssh-private-key}
@@ -140,6 +140,12 @@ declare max_run_duration_args=""
 if [ "${MAX_RUN_DURATION}" != '0' ]; then
     max_run_duration_args="--max-run-duration=${MAX_RUN_DURATION} --instance-termination-action=delete"
 fi
+
+# Increase the IAP TCP upload bandwidth
+export PATH=$PATH:$(gcloud info --format="value(basic.python_location)")
+$(gcloud info --format="value(basic.python_location)") -m pip install --upgrade pip --no-warn-script-location > /dev/null 2>&1 || true
+$(gcloud info --format="value(basic.python_location)") -m pip install numpy --no-warn-script-location > /dev/null 2>&1 || true
+export CLOUDSDK_PYTHON_SITEPACKAGES=1
 
 # Colours for logging.
 if [ -z "${WORKSPACE}" ]; then
