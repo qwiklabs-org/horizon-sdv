@@ -108,7 +108,7 @@ gcloud compute instances start cuttlefish-vm-test-instance-v110 --zone=europe-we
 gcloud compute ssh --zone "europe-west1-d" "cuttlefish-vm-test-instance-v110" --tunnel-through-iap --project "sdva-2108202401"
 ```
 
-User can clone the Horion SDV repository on the instance and run CVD Launcher scripts as follows:
+User can clone the Horizon SDV repository on the instance and run CVD Launcher scripts as follows:
 ```
 CUTTLEFISH_DOWNLOAD_URL="gs://sdva-2108202401-aaos/Android/Builds/AAOS_Builder/10/" \
 CUTTLEFISH_MAX_BOOT_TIME=420 \
