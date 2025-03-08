@@ -95,13 +95,20 @@ Connect to the instance, e.g.
 gcloud compute ssh --zone "europe-west1-d" "sdv-bastion-host" --tunnel-through-iap --project "sdva-2108202401"
 # Set up credentials to connect to the VM instance
 gcloud container clusters get-credentials sdv-cluster --region europe-west1 --internal-ip
+
+# If user wishes to use MTK Connect then retrieve the MTK Connect API key via bastion:
+# Retrieve the MTK_CONNECT_USERNAME:
+kubectl get secrets -n mtk-connect mtk-connect-apikey -o json | jq -r '.data.username' | base64 -d
+# Retrieve the MTK_CONNECT_PASSWORD:
+kubectl get secrets -n mtk-connect mtk-connect-apikey -o json | jq -r '.data.password' | base64 -d
+
 # Start the instance
 gcloud compute instances start cuttlefish-vm-test-instance-v110 --zone=europe-west1-d
 # Connect to the instance
 gcloud compute ssh --zone "europe-west1-d" "cuttlefish-vm-test-instance-v110" --tunnel-through-iap --project "sdva-2108202401"
 ```
 
-After that user can clone the workloads repository on the instance and run CVD Launcher scripts as follows:
+User can clone the Horion SDV repository on the instance and run CVD Launcher scripts as follows:
 ```
 CUTTLEFISH_DOWNLOAD_URL="gs://sdva-2108202401-aaos/Android/Builds/AAOS_Builder/10/" \
 CUTTLEFISH_MAX_BOOT_TIME=420 \
@@ -109,6 +116,36 @@ NUM_INSTANCES=1 \
 VM_CPUS=16 \
 VM_MEMORY_MB="16384" \
 ./workloads/android/pipelines/tests/cvd_launcher/cvd_start_stop.sh --start
+```
+
+Users should stop CVD and devices with the following command when complete:
+```
+./workloads/android/pipelines/tests/cvd_launcher/cvd_start_stop.sh --stop
+```
+
+**MTK Connect:**
+
+Users may optionally connect devices to MTK Connect in order to utilise the UI. Ensure the devices are running before
+following the instructions below.
+
+```
+# Start MTK Connect (use the credentials from earlier)
+sudo \
+MTK_CONNECT_DOMAIN="dev.horizon-sdv.com" \
+MTK_CONNECT_USERNAME=${MTK_CONNECT_USERNAME} \
+MTK_CONNECT_PASSWORD=${MTK_CONNECT_PASSWORD} \
+MTK_CONNECTED_DEVICES=1 \
+MTK_CONNECT_TESTBENCH="Example-Testbench" \
+./workloads/android/pipelines/tests/cvd_launcher/cvd_mtk_connect.sh --start
+
+# When complete, stop MTK Connect and delete the testbench.
+sudo \
+MTK_CONNECT_DOMAIN="dev.horizon-sdv.com" \
+MTK_CONNECT_USERNAME=${MTK_CONNECT_USERNAME} \
+MTK_CONNECT_PASSWORD=${MTK_CONNECT_PASSWORD} \
+MTK_CONNECTED_DEVICES=1 \
+MTK_CONNECT_TESTBENCH="Example-Testbench" \
+./workloads/android/pipelines/tests/cvd_launcher/cvd_mtk_connect.sh --stop || true
 ```
 
 When testing is complete, it is advisable to stop the instance, e.g.
