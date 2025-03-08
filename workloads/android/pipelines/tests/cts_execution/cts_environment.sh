@@ -22,6 +22,8 @@
 
 CTS_DOWNLOAD_URL=$(echo "${CTS_DOWNLOAD_URL}" | xargs)
 CTS_DOWNLOAD_URL=${CTS_DOWNLOAD_URL:-}
+# Strip any trailing slashes as this can impact on the download URL.
+CTS_DOWNLOAD_URL=${CTS_DOWNLOAD_URL%/}
 CTS_PATHNAME=$(echo "${CTS_PATHNAME}" | xargs)
 CTS_PATHNAME=${CTS_PATHNAME:-android-cts}
 CTS_TESTPLAN=$(echo "${CTS_TESTPLAN}" | xargs)
