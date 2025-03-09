@@ -24,10 +24,8 @@
 # From command line, such as Google Cloud Shell, create templates for all
 # versions of android-cuttlefish host tools/packages:
 #
-# CUTTLEFISH_REVISION=v0.9.29 ./cf_create_instance_template.sh && \
-#  CUTTLEFISH_REVISION=v0.9.30 ./cf_create_instance_template.sh && \
-#  CUTTLEFISH_REVISION=v0.9.31 ./cf_create_instance_template.sh && \
-#  ./cf_create_instance_template.sh # for main
+#  CUTTLEFISH_REVISION=v1.1.0 ./cf_create_instance_template.sh && \
+#  CUTTLEFISH_REVISION=main ./cf_create_instance_template.sh
 #
 # The following variables are required to run the script, choose to use
 # default values or override from command line.

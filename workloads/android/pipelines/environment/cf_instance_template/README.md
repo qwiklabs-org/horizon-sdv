@@ -128,7 +128,7 @@ This would allow developers to:
 
 ## Example Usage <a name="examples"></a>
 
-If user wishes to create a temporary test instance to work with, then they can do so as follows:
+If user wishes to create a temporary test instance to work with, then they can do so as follows from Jenkins:
 
 - `ANDROID_CUTTLEFISH_REVISION`: choose the version you wish to build the template from
 - `CUTTLEFISH_INSTANCE_UNIQUE_NAME` : provide a unique name, starting with cuttlefish-vm, e.g. `cuttlefish-vm-test-instance-v110.`
