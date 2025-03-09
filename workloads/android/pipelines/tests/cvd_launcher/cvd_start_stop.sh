@@ -144,9 +144,9 @@ function cuttlefish_nuclear() {
 
 # Stop CVD.
 function cuttlefish_stop() {
-    cd "${HOME}"/cf || exit
     adb reboot
     sudo adb kill-server || true
+    cd "${HOME}"/cf || exit
     HOME="${HOME}/cf" ./bin/stop_cvd
 }
 

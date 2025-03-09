@@ -107,8 +107,13 @@ gcloud compute instances start cuttlefish-vm-test-instance-v110 --zone=europe-we
 # Connect to the instance
 gcloud compute ssh --zone "europe-west1-d" "cuttlefish-vm-test-instance-v110" --tunnel-through-iap --project "sdva-2108202401"
 ```
+**Authentication Required:** You may be prompted to authenticate during this process. To complete the authentication, follow the on-screen instructions or run `gcloud auth login`.
 
-User can clone the Horizon SDV repository on the instance and run CVD Launcher scripts as follows:
+Once you have access to the instance, follow these steps:
+
+- Clone the Horizon SDV repository on the instance.
+- Run the CVD Launcher scripts as per the following examples.
+
 ```
 CUTTLEFISH_DOWNLOAD_URL="gs://sdva-2108202401-aaos/Android/Builds/AAOS_Builder/10/" \
 CUTTLEFISH_MAX_BOOT_TIME=420 \

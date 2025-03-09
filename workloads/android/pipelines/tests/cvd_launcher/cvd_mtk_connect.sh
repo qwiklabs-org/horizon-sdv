@@ -51,6 +51,8 @@ MTK_CONNECT_FILE_PATH="$(dirname "${BASH_SOURCE[0]}")"
 MTK_CONNECT_DELETE_OFFLINE_TESTBENCHES=${MTK_CONNECT_DELETE_OFFLINE_TESTBENCHES:-false}
 
 declare -r scripts_path="/usr/src/scripts"
+declare -r app_path="/usr/src/app"
+declare -r config_path="/usr/src/config"
 
 # Adjust devices based on true number of active devices.
 function mtkc_max_devices() {
@@ -62,9 +64,9 @@ function mtkc_max_devices() {
         if (( num_instances == 0 )); then
             # Restart adb (adb devices can be unreliable)
             echo "Restart adb server, sleep 40s"
-            sudo adb kill-server || true
+            adb kill-server || true
             sleep 20
-            sudo adb start-server || true
+            adb start-server || true
             sleep 20
             num_instances=$(adb devices | grep -c -E '0.+device$')
 
@@ -87,8 +89,6 @@ function mtkc_max_devices() {
 
 # Start MTK Connect agent and create testbench.
 function mtkc_start() {
-    local -r app_path="/usr/src/app"
-    local -r config_path="/usr/src/config"
 
     # Avoid (unattended-upgr)
     dpkg --configure -a
@@ -128,7 +128,7 @@ function mtkc_start() {
     if [[ "$1" == "--start" ]]; then
         # Local Linux host install.
         AUTH=$(echo -n "${MTK_CONNECT_USERNAME}:${MTK_CONNECT_PASSWORD}" | base64)
-        sudo curl -sSL https://"${MTK_CONNECT_DOMAIN}"/mtk-connect/get-agent?platform=linux | sudo AUTH="${AUTH}" bash
+        curl -sSL https://"${MTK_CONNECT_DOMAIN}"/mtk-connect/get-agent?platform=linux | AUTH="${AUTH}" bash
         RESULT="$?"
         if (( RESULT != 0 )); then
             echo "Error Download/install returned ${RESULT}"
@@ -154,6 +154,9 @@ function mtkc_create_testbench() {
 function mtkc_stop() {
     cd "${scripts_path}" || exit
     node remove-testbench.js
+    # Clean up
+    rm -rf /opt/mtk-connect-agent "${config_path}" "${app_path}" "${scripts_path}"
+    pkill -9 -f runAgent.js
 }
 
 # Print a summary of the MTK Connect agent.
