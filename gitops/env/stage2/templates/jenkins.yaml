@@ -38,6 +38,9 @@ spec:
         agent:
           containerCap: 20
         controller:
+          sidecars:
+            configAutoReload:
+              enabled: false
           jenkinsUriPrefix: /jenkins
           admin:
             createSecret: true
