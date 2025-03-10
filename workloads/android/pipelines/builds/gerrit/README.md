@@ -41,7 +41,7 @@ One-time setup requirements.
   - Docker image template: `Android Workflows/Environment/Docker Image Template`
   - Cuttlefish instance template: `Android Workflows/Environment/CF Instance Template`
 
-Gerrit depends on a ` Cuttlefish instance template`, the job includes reference to `cuttlefish-vm-main`. If user chooses not to create a `cuttlefish-vm-main` instance, the job will fail. Update the Jenkinsfile to match the instance name you wish to use.
+To successfully run the pipeline, ensure that the referenced Cuttlefish instance template exists, as specified in the `GERRIT_CUTTLEFISH_INSTANCE_TEMPLATE_LABEL` system variable. If the template is missing, the job will fail. Update the `jenkins.yaml` system variables to align with the `computeEngine` label of the instance you intend to use.
 
 ## Gerrit Triggers
 
@@ -100,6 +100,8 @@ These are as follows:
     - Defines the number of parallel sync jobs when running `repo sync`. By default this is used by Gerrit build
       pipeline but also forms the default for `GERRIT_REPO_SYNC_JOBS` parameter in build jobs.
 
+-   `GERRIT_CUTTLEFISH_INSTANCE_TEMPLATE_LABEL`
+    - The name of the Cuttlefish instance template to use for the pipeline.
 
 ## KNOWN ISSUES <a name="known-issues"></a>
 

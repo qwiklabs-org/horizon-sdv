@@ -278,6 +278,8 @@ spec:
                           value: "reclaimable-storage-class"
                         - key: "REPO_SYNC_JOBS"
                           value: "2"
+                        - key: "GERRIT_CUTTLEFISH_INSTANCE_TEMPLATE_LABEL"
+                          value: "cuttlefish-vm-main"
                 groovy:
                   - script: >
                       println("This is groovy !");

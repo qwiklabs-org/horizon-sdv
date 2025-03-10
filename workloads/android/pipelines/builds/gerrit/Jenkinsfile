@@ -220,7 +220,7 @@ pipeline {
     }
 
     stage ('Start Test VM Instance') {
-      agent { label 'cuttlefish-vm-main' }
+      agent { label "${env.GERRIT_CUTTLEFISH_INSTANCE_TEMPLATE_LABEL}" }
       stages {
         stage ('Test: aosp_cf_x86_64_auto') {
           when { expression { env.GERRIT_CHANGE_NUMBER } }
