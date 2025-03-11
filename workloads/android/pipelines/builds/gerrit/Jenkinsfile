@@ -87,7 +87,7 @@ pipeline {
     stage ('Start Build VM Instance') {
       agent { kubernetes { yaml kubernetesPodTemplate } }
       stages {
-        stage ('Initialise repository') {
+        stage ('Initialise') {
           when { expression { env.GERRIT_CHANGE_NUMBER } }
           steps {
             script {
@@ -115,11 +115,6 @@ pipeline {
                   git config --global credential.helper store
                   git config --global url."https://${GERRIT_USERNAME}@${HORIZON_DOMAIN}/gerrit".insteadOf "https://${HORIZON_DOMAIN}/gerrit"
                   echo https://"${GERRIT_USERNAME}":"${GERRIT_PASSWORD}"@"${HORIZON_DOMAIN}/gerrit" > ~/.git-credentials
-
-                  export AAOS_GERRIT_MANIFEST_URL="https://${HORIZON_DOMAIN}/gerrit/android/platform/manifest"
-                  export AAOS_REVISION="${GERRIT_BRANCH}"
-                  export AAOS_CLEAN="NO_CLEAN"
-                  ./workloads/android/pipelines/builds/aaos_builder/aaos_initialise.sh
                 '''
               }
               archiveArtifacts artifacts: 'build_cache*.txt', followSymlinks: false, onlyIfSuccessful: false, allowEmptyArchive: true
@@ -140,6 +135,7 @@ pipeline {
                   export CLOUD_REGION="${CLOUD_REGION}"
                   export AAOS_BUILD_NUMBER=${BUILD_NUMBER}/${AAOS_LUNCH_TARGET}
                   export AAOS_CLEAN="NO_CLEAN"
+                  ./workloads/android/pipelines/builds/aaos_builder/aaos_initialise.sh
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_build.sh
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_avd_sdk.sh || true
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_storage.sh
@@ -163,6 +159,7 @@ pipeline {
                   export CLOUD_REGION="${CLOUD_REGION}"
                   export AAOS_BUILD_NUMBER=${BUILD_NUMBER}/${AAOS_LUNCH_TARGET}
                   export AAOS_CLEAN="NO_CLEAN"
+                  ./workloads/android/pipelines/builds/aaos_builder/aaos_initialise.sh
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_build.sh
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_avd_sdk.sh || true
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_storage.sh
@@ -186,6 +183,7 @@ pipeline {
                   export CLOUD_REGION="${CLOUD_REGION}"
                   export AAOS_BUILD_NUMBER=${BUILD_NUMBER}/${AAOS_LUNCH_TARGET}
                   export AAOS_CLEAN="NO_CLEAN"
+                  ./workloads/android/pipelines/builds/aaos_builder/aaos_initialise.sh
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_build.sh
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_storage.sh
                 '''
@@ -208,6 +206,7 @@ pipeline {
                   export CLOUD_REGION="${CLOUD_REGION}"
                   export AAOS_BUILD_NUMBER=${BUILD_NUMBER}/${AAOS_LUNCH_TARGET}
                   export AAOS_CLEAN="NO_CLEAN"
+                  ./workloads/android/pipelines/builds/aaos_builder/aaos_initialise.sh
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_build.sh
                   ./workloads/android/pipelines/builds/aaos_builder/aaos_storage.sh
                 '''
