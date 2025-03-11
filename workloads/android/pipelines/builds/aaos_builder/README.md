@@ -40,7 +40,7 @@ One-time setup requirements.
 
 This provides the URL for the Android repo manifest. Such as:
 
-- https://dev.horizon-sdv.scpmtk.com/android/platform/manifest (default)
+- https://dev.horizon-sdv.com/gerrit/android/platform/manifest (default)
 - https://android.googlesource.com/platform/manifest
 
 ### `AAOS_REVISION`
@@ -177,7 +177,7 @@ Some targets have their own definitions for `POST_REPO_INITIALISE_COMMAND` and `
 
 Example 1: Initialise the repos for `aosp_cf_x86_64_auto-ap1a-userdebug`
 ```
-AAOS_GERRIT_MANIFEST_URL=https://dev.horizon-sdv.scpmtk.com/android/platform/manifest \
+AAOS_GERRIT_MANIFEST_URL=https://dev.horizon-sdv.com/gerrit/android/platform/manifest \
 AAOS_REVISION=horizon/android-14.0.0_r30 \
 AAOS_LUNCH_TARGET=aosp_cf_x86_64_auto-ap1a-userdebug \
 ./workloads/android/pipelines/builds/aaos_builder/aaos_initialise.sh
@@ -185,7 +185,7 @@ AAOS_LUNCH_TARGET=aosp_cf_x86_64_auto-ap1a-userdebug \
 
 Example 2: Initialise the repos for `aosp_tangorpro_car-ap1a-userdebug` with Gerrit patch set.
 ```
-AAOS_GERRIT_MANIFEST_URL=https://dev.horizon-sdv.scpmtk.com/android/platform/manifest \
+AAOS_GERRIT_MANIFEST_URL=https://dev.horizon-sdv.com/gerrit/android/platform/manifest \
 AAOS_REVISION=horizon/android-14.0.0_r30 \
 AAOS_LUNCH_TARGET=aosp_tangorpro_car-ap1a-userdebug \
 GERRIT_CHANGE_NUMBER=82 \

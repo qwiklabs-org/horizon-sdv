@@ -27,7 +27,7 @@ One-time setup requirements.
 
 This provides the URL for the Android repo manifest. Such as:
 
-- https://dev.horizon-sdv.scpmtk.com/android/platform/manifest (default)
+- https://dev.horizon-sdv.com/gerrit/android/platform/manifest (default)
 - https://android.googlesource.com/platform/manifest
 
 ### `AAOS_REVISION`

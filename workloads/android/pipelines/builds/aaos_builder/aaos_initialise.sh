@@ -102,7 +102,7 @@ if [[ -n "${GERRIT_PROJECT}" && -n "${GERRIT_CHANGE_NUMBER}" && -n "${GERRIT_PAT
     # Use standard git fetch to retrieve the change.
     # Find the project name from the manifest.
     PROJECT_PATH=$(repo list -p "${GERRIT_PROJECT}")
-    PROJECT_URL=$(echo "${AAOS_GERRIT_MANIFEST_URL}" | cut -d'/' -f1-3)/"${GERRIT_PROJECT}"
+    PROJECT_URL=$(echo "${AAOS_GERRIT_MANIFEST_URL}" | cut -d'/' -f1-4)/"${GERRIT_PROJECT}"
 
     # Extract the last two digits of the change number.
     if (( ${#GERRIT_CHANGE_NUMBER} > 2 )); then
