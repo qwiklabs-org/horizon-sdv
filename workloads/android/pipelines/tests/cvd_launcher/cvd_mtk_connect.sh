@@ -53,6 +53,7 @@ MTK_CONNECT_DELETE_OFFLINE_TESTBENCHES=${MTK_CONNECT_DELETE_OFFLINE_TESTBENCHES:
 declare -r scripts_path="/usr/src/scripts"
 declare -r app_path="/usr/src/app"
 declare -r config_path="/usr/src/config"
+declare -r mtkc_config_path="/opt/mtk-connect-agent/config"
 
 # Adjust devices based on true number of active devices.
 function mtkc_max_devices() {
@@ -97,7 +98,7 @@ function mtkc_start() {
     npm install -g wait-on pm2 >/dev/null 2>&1
 
     # Create the environment.
-    mkdir -p "${app_path}" "${config_path}" "${scripts_path}"
+    mkdir -p "${app_path}" "${config_path}" "${scripts_path}" "${mtkc_config_path}"
 
     {
         echo "MTK_CONNECT_DOMAIN=${MTK_CONNECT_DOMAIN}"
@@ -136,7 +137,7 @@ function mtkc_start() {
         fi
 
         rm -rf "${config_path}"
-        ln -sf /opt/mtk-connect-agent/config "${config_path}"
+        ln -sf "${mtkc_config_path}" "${config_path}"
 
         echo "Waiting on ${config_path}/registration.name ..."
         wait-on "${config_path}"/registration.name
