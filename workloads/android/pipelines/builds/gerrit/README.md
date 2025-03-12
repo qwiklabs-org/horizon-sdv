@@ -87,6 +87,12 @@ These are as follows:
 -   `CLOUD_ZONE`
     - The GCP project zone. Important for bucket, registry paths used in pipelines.
 
+-   `GERRIT_CREDENTIALS_ID`
+    - The credential for access to Gerrit, required for build pipelines.
+
+-   `GERRIT_CUTTLEFISH_INSTANCE_TEMPLATE_LABEL`
+    - The name of the Cuttlefish instance template to use for the pipeline.
+
 -   `HORIZON_DOMAIN`
     - The URL domain which is required by pipeline jobs to derive URL for tools and GCP.
 
@@ -99,9 +105,6 @@ These are as follows:
 -   `REPO_SYNC_JOBS`
     - Defines the number of parallel sync jobs when running `repo sync`. By default this is used by Gerrit build
       pipeline but also forms the default for `GERRIT_REPO_SYNC_JOBS` parameter in build jobs.
-
--   `GERRIT_CUTTLEFISH_INSTANCE_TEMPLATE_LABEL`
-    - The name of the Cuttlefish instance template to use for the pipeline.
 
 ## KNOWN ISSUES <a name="known-issues"></a>
 

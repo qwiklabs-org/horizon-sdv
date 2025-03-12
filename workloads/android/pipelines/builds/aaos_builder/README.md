@@ -244,6 +244,9 @@ These are as follows:
 -   `CLOUD_ZONE`
     - The GCP project zone. Important for bucket, registry paths used in pipelines.
 
+-   `GERRIT_CREDENTIALS_ID`
+    - The credential for access to Gerrit, required for build pipelines.
+
 -   `HORIZON_DOMAIN`
     - The URL domain which is required by pipeline jobs to derive URL for tools and GCP.
 

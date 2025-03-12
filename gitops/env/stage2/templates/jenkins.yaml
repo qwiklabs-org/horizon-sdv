@@ -273,6 +273,10 @@ spec:
                           value: {{ .Values.config.zone }}
                         - key: "CLOUD_PROJECT"
                           value: {{ .Values.config.projectID }}
+                        - key: "GERRIT_CREDENTIALS_ID"
+                          value: "jenkins-gerrit-http-password"
+                        - key: "GERRIT_CUTTLEFISH_INSTANCE_TEMPLATE_LABEL"
+                          value: "cuttlefish-vm-main"
                         - key: "HORIZON_DOMAIN"
                           value: {{ .Values.config.domain }}
                         - key: "JENKINS_SERVICE_ACCOUNT"
@@ -281,8 +285,6 @@ spec:
                           value: "reclaimable-storage-class"
                         - key: "REPO_SYNC_JOBS"
                           value: "2"
-                        - key: "GERRIT_CUTTLEFISH_INSTANCE_TEMPLATE_LABEL"
-                          value: "cuttlefish-vm-main"
                 groovy:
                   - script: >
                       println("This is groovy !");
