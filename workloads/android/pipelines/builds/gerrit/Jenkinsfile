@@ -170,7 +170,7 @@ pipeline {
           }
         }
 
-        stage ('Build: aosp_tangorpro_car') {
+        stage ('Build: aosp_cf_x86_64_auto') {
           when { expression { env.GERRIT_CHANGE_NUMBER } }
           steps {
             container(name: 'builder') {
@@ -178,7 +178,7 @@ pipeline {
                 sh '''
                   export AAOS_GERRIT_MANIFEST_URL="https://${HORIZON_DOMAIN}/gerrit/android/platform/manifest"
                   export AAOS_REVISION="${GERRIT_BRANCH}"
-                  export AAOS_LUNCH_TARGET="aosp_tangorpro_car-${ANDROID_BUILD_ID}userdebug"
+                  export AAOS_LUNCH_TARGET="aosp_cf_x86_64_auto-${ANDROID_BUILD_ID}userdebug"
                   export AAOS_ARTIFACT_ROOT_NAME="${ANDROID_BUILD_BUCKET_ROOT_NAME}"
                   export CLOUD_REGION="${CLOUD_REGION}"
                   export AAOS_BUILD_NUMBER=${BUILD_NUMBER}/${AAOS_LUNCH_TARGET}
@@ -193,7 +193,7 @@ pipeline {
           }
         }
 
-        stage ('Build: aosp_cf_x86_64_auto') {
+        stage ('Build: aosp_tangorpro_car') {
           when { expression { env.GERRIT_CHANGE_NUMBER } }
           steps {
             container(name: 'builder') {
@@ -201,7 +201,7 @@ pipeline {
                 sh '''
                   export AAOS_GERRIT_MANIFEST_URL="https://${HORIZON_DOMAIN}/gerrit/android/platform/manifest"
                   export AAOS_REVISION="${GERRIT_BRANCH}"
-                  export AAOS_LUNCH_TARGET="aosp_cf_x86_64_auto-${ANDROID_BUILD_ID}userdebug"
+                  export AAOS_LUNCH_TARGET="aosp_tangorpro_car-${ANDROID_BUILD_ID}userdebug"
                   export AAOS_ARTIFACT_ROOT_NAME="${ANDROID_BUILD_BUCKET_ROOT_NAME}"
                   export CLOUD_REGION="${CLOUD_REGION}"
                   export AAOS_BUILD_NUMBER=${BUILD_NUMBER}/${AAOS_LUNCH_TARGET}
