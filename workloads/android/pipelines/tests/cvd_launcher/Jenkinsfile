@@ -182,9 +182,8 @@ pipeline {
           when { expression { currentBuild.currentResult != 'SUCCESS' } }
           steps {
             container(name: 'builder') {
-              script { VM_NODE_NAME = env.VM_NODE_NAME }
               sh '''
-                echo "Removing " ${VM_NODE_NAME} " on error!"
+                echo "Removing " ${VM_NODE_NAME} " on error!" || true
                 yes Y | gcloud compute instances delete ${VM_NODE_NAME} --zone ${CLOUD_ZONE} || true
               '''
             }
