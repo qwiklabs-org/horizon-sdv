@@ -28,6 +28,9 @@ spec:
     targetRevision: {{ .Values.spec.source.targetRevision }}
     helm:
       values: |
+        config:
+          gitops:
+            landingpage: {{ .Values.config.apps.landingpage }}
         spec:
           source:
             repoURL: {{ .Values.spec.source.repoURL }}

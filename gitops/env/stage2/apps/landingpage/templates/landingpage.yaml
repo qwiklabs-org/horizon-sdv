@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: landingpage
-        image: {{ .Values.config.apps.landingpage }}
+        image: {{ .Values.config.gitops.landingpage }}
         imagePullPolicy: Always
         ports:
         - containerPort: 80
