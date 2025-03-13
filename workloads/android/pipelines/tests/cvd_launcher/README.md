@@ -116,7 +116,7 @@ Once you have access to the instance, follow these steps:
 
 ```
 CUTTLEFISH_DOWNLOAD_URL="gs://sdva-2108202401-aaos/Android/Builds/AAOS_Builder/10/" \
-CUTTLEFISH_MAX_BOOT_TIME=420 \
+CUTTLEFISH_MAX_BOOT_TIME=300 \
 NUM_INSTANCES=1 \
 VM_CPUS=16 \
 VM_MEMORY_MB="16384" \

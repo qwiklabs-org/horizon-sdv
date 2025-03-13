@@ -172,7 +172,7 @@ case "${1}" in
         # CVD can fail to boot any devices, so we retry start.
         # Refer to Google for the reasons why!
         NUM_RETRIES=3
-        for (( i = 0; i < NUM_RETRIES; i++ )); do
+        for (( i = 1; i <= NUM_RETRIES; i++ )); do
             cuttlefish_start
             cuttlefish_wait_for_device_booted
             cuttlefish_adb_restart
