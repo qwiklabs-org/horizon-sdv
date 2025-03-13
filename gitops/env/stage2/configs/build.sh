@@ -15,6 +15,15 @@
 # limitations under the License.
 
 VERSION=1.0.0
+#GCP_PROJECT_ID=<PROJECT_ID>
+#GCP_CLOUD_REGION=<REGION_NAME>
+
+declare -a configs=("landingpage-app")
+substr="-app"
+for config in "${configs[@]}"; do
+  docker build -t ${GCP_CLOUD_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/horizon-sdv/${config}:${VERSION} ${config%$substr*}/${config}
+  docker push ${GCP_CLOUD_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/horizon-sdv/${config}:${VERSION}
+done
 
 declare -a configs=("gerrit-post" "mtk-connect-post" "mtk-connect-post-key" "keycloak-post" "keycloak-post-gerrit" "keycloak-post-jenkins" "keycloak-post-mtk-connect")
 substr="-post"
