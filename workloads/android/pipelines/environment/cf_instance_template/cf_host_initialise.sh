@@ -39,6 +39,8 @@ function cuttlefish_virtualization() {
 function cuttlefish_install_additional_packages() {
     local -a package_list=("default-jdk" "adb" "git" "npm" "aapt" "htop")
 
+    echo "Installing additional packages."
+
     # Ensure update to latest package list.
     sudo apt update -y
     for package in "${package_list[@]}"; do
@@ -63,6 +65,8 @@ function cuttlefish_install_additional_packages() {
     # Show node version and path.
     which node
     node -v
+
+    echo "Installing additional packages completed."
 }
 
 # Disable unattended-upgrades
@@ -75,6 +79,8 @@ function disable_unattended_upgrades() {
 
 # Install CTS test harness on instance to avoid lengthy CTS runs.
 function cuttlefish_install_cts() {
+    echo "Installing CTS test harness"
+
     su -l "${JENKINS_USER}" -c "mkdir -p android-cts_15"
     su -l "${JENKINS_USER}" -c "wget -nv ${CTS_ANDROID_15_URL} -O android-cts_15.zip"
     su -l "${JENKINS_USER}" -c "unzip android-cts_15.zip -d android-cts_15"
@@ -86,6 +92,8 @@ function cuttlefish_install_cts() {
     su -l "${JENKINS_USER}" -c "rm -f android-cts_14.zip"
     # Force sync to ensure disk is updated.
     sync
+
+    echo "Installing CTS test harness completed."
 }
 
 # Add the user to the CVD groups.

@@ -56,7 +56,7 @@ URL is of the form `gs://<ANDROID_BUILD_BUCKET_ROOT_NAME>/Android/Builds/AAOS_Bu
 
 ### `ANDROID_VERSION`
 
-Defines the Android and thus CTS version to use. The Cuttlefish VM Instance is already pre-installed with Android 14 CTS (r6) and Android 15 CTS (r2), so this defines which version to use.
+Defines the Android and thus CTS version to use. The Cuttlefish VM Instance is already pre-installed with Android 14 CTS and Android 15 CTS, so this defines which version to use.
 
 ### `CTS_DOWNLOAD_URL`
 

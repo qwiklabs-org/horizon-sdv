@@ -140,6 +140,7 @@ if [ "${MAX_RUN_DURATION}" != '0' ]; then
 fi
 
 # Increase the IAP TCP upload bandwidth
+# shellcheck disable=SC2155
 export PATH=$PATH:$(gcloud info --format="value(basic.python_location)")
 $(gcloud info --format="value(basic.python_location)") -m pip install --upgrade pip --no-warn-script-location > /dev/null 2>&1 || true
 $(gcloud info --format="value(basic.python_location)") -m pip install numpy --no-warn-script-location > /dev/null 2>&1 || true
