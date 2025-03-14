@@ -311,7 +311,20 @@ spec:
                       }
                   - script: >
                       pipelineJob('Android/Environment/Docker Image Template') {
-                        description('<p>Build the container image used on Kubernetes for building Android targets and Cuttlefish instances.</p>')
+                         description('''
+                          <p>This job builds the container image used (as the <tt>builder</tt> container) in other pipelines  to
+                            <ul>
+                                <li style="line-height:1.5">build Android targets &amp; Cuttlefish instances</li>
+                                <li style="line-height:1.5">perform cleanup activities</li>
+                            </ul>
+                          </p>
+                          <p>This image contains the tools required for building AAOS targets as well as the google cloud sdk and google repo command tool.</p>
+                          <p>Each time a change is made to the dockerfile this job should be run once with <tt>NO_PUSH=false</tt>.</p> 
+                          <p>The resulting image template is stored at <tt>{{ .Values.config.region }}-docker.pkg.dev/{{ .Values.config.projectID }}/ANDROID_BUILD_DOCKER_ARTIFACT_PATH_NAME</tt>
+                          <br/>(where <tt>ANDROID_BUILD_DOCKER_ARTIFACT_PATH_NAME</tt> is an environment variable)
+                          </p>
+                          
+                        ''')
                         triggers {
                           hudsonStartupTrigger {
                             nodeParameterName("")
@@ -342,7 +355,31 @@ spec:
                       }
                   - script: >
                       pipelineJob('Android/Environment/CF Instance Template') {
-                        description('<p>Pipeline for creating and managing GCE instance templates optimized for Cuttlefish workflows, such as CVD Launcher and CTS Execution.<br/>Includes an option to delete outdated instances and artifacts.</p>')
+                        description('''
+                          <p>This job creates the GCE instance templates used by test pipelines 
+                              to spin up cuttlefish-ready &amp; CTS-ready cloud instances which are then used to launch 
+                              <a href="https://source.android.com/docs/devices/cuttlefish" target="_blank" title="Cuttlefish Virtual Device">CVD</a> 
+                              and run 
+                              <a href="https://source.android.com/docs/compatibility/cts" target="_blank" title="Compatibility Test Suite">CTS</a>
+                              tests.</p>
+                            <p>The name for the created instance template can either be auto-generated or user-provided -
+                              the resulting artifact will be <tt>instance-template-&lt;name&gt;</tt>
+                              <br/>if a user-defined name is used, the Jenkins CasC (jenkins.yaml) must be updated with a new computeEngine entry for the template (see README for details). 
+                            </p>
+                            <p>This job can also be used to delete outdated instances and associated artifacts.</p>
+                            <p>To view the created instance templates, either go to the 
+                            <a href="https://console.cloud.google.com/compute/instanceTemplates/list?inv=1&invt=Abqr1A&project={{ .Values.config.projectID }}" target="_blank">cloud console</a>      
+                            or run the following command  (<a href="https://cloud.google.com/docs/authentication/gcloud" target="_blank">sign in</a> first): 
+                            <br/><tt>gcloud compute instance-templates list | grep cuttlefish-vm</tt>
+                            </p>
+                            <p><b>Note:</b> During the process of creating an instance template, this pipeline also creates a custom image which is referenced by the created instance template.
+                              <br/>These images can be viewed on the 
+                              <a href="https://console.cloud.google.com/compute/images?project={{ .Values.config.projectID }}" target="_blank">cloud console</a> 
+
+                              or with the following command (<a href="https://cloud.google.com/docs/authentication/gcloud" target="_blank">sign in</a> first):
+                              <br/><tt>gcloud compute instances list | grep cuttlefish-vm</tt>
+                            </p>
+                        ''')
                         triggers {
                           hudsonStartupTrigger {
                             nodeParameterName("")
@@ -410,8 +447,21 @@ spec:
                   - script: >
                       pipelineJob('Android/Environment/Delete Cuttlefish VM Instance') {
                         description('''
-                          <p>This job allows tooling developers delete Cuttlefish VM instances.<br/>
-                          Not for everyday use, simply to aid developers clean up if expensive instances are left running.</p>''')
+                           <p>This is a helper job which allows developers to delete Cuttlefish VM instances
+                                <br/>- it is only intended to be used for clean-up purposes if expensive instances are left running when jobs fail / crash.
+                            </p>
+                            <p>To view running instances see 
+                                <ul>
+                                    <li style="line-height:1.5"><a href="http://{{ .Values.config.domain }}/jenkins/manage/computer/" target="_blank">http://{{ .Values.config.domain }}/jenkins/manage/computer/</a></li>
+                                    <li style="line-height:1.5"><a href="https://console.cloud.google.com/compute/instances?project={{ .Values.config.projectID }}" target="_blank">https://console.cloud.google.com/compute/instances?project={{ .Values.config.projectID }}</a></li>
+                                </ul>
+                            </p>
+                            <p><b>Note:</b> only VM Instances named with the <tt>cuttlefish-vm</tt> prefix can be deleted using this job.</p>
+                            <!--
+                            https://dev.horizon-sdv.com/jenkins/manage/computer/
+                            https://console.cloud.google.com/compute/instances?project=sdva-2108202401
+                            -->
+                          ''')
                         triggers {
                           hudsonStartupTrigger {
                             nodeParameterName("")
@@ -443,8 +493,16 @@ spec:
                   - script: >
                       pipelineJob('Android/Environment/Delete MTK Connect Testbench') {
                         description('''
-                          <p>This job allows tooling developers delete MTK Connect offline testbenches..<br/>
-                          Not for everyday use, simply to aid developers clean up during developing tests.</p>''')
+                          <p>This is a helper job which allows developers to delete any offline MTK Connect testbenches
+                              <br/>- it is only intended to be used for clean-up purposes for when jobs fail / crash without performing the usual cleanup operations.
+                          </p>
+                          <p>To find the name of the testbench created by a test pipeline job, search for the string <i>"MTK Connect Testbench:"</i> in the console log;
+                              it will be named as <tt>jobname_buildnumber</tt>. 
+                          <br/>e.g. <tt>MTK Connect Testbench: Android/Tests/CVD_Launcher-5</tt>
+                          </p>
+                          <p>Access the MTK Connect Testbenches <a href="http://{{ .Values.config.domain }}/mtk-connect/portal/testbenches" target="_blank">here</a>.
+                          </p>
+                          ''')
                         triggers {
                           hudsonStartupTrigger {
                             nodeParameterName("")
@@ -475,7 +533,25 @@ spec:
                       }
                   - script: >
                       pipelineJob('Android/Builds/AAOS Builder') {
-                        description('<p>Android Automotive build pipeline.<br/>This pipeline builds Android Automotive OS targets.</p>')
+                        description('''
+                          <p>This job is used to build Android Automotive virtual devices and platform targets from the provided source manifest.</p>
+                          <p>The following builds are supported:
+                          <ul>
+                              <li style="line-height:1.5"><a href="https://source.android.com/docs/automotive/start/avd/android_virtual_device" target="_blank">Android Virtual Devices</a>
+                              for use with 
+                              <a href="https://source.android.com/docs/automotive/start/avd/android_virtual_device#share-an-avd-image-with-android-studio-users" target="_blank">Android Studio</a></li> 
+                              <li style="line-height:1.5"><a href="https://source.android.com/docs/devices/cuttlefish" target="_blank">Cuttlefish Virtual Devices</a> 
+                              for use with <a href="https://source.android.com/docs/compatibility/cts" target="_blank">CTS</a></li>
+                              <li style="line-height:1.5">Reference hardware platforms such as 
+                              <a href="https://github.com/raspberry-vanilla/android_local_manifest" target="_blank">Rpi</a> and 
+                              <a href="https://source.android.com/docs/automotive/start/pixelxl" target="_blank">Pixel Tablets</a></li>
+                          </ul>
+                          </p>
+                          <p>Build outputs are stored in a google cloud storage bucket (see build artifact for location). </p>
+                          <p>To view artifacts on gcloud run the following command (<a href="https://cloud.google.com/docs/authentication/gcloud" target="_blank">sign in</a> first): 
+                                <br/><tt>gcloud storage ls gs://{{ .Values.config.projectID }}/aaos/Android/Builds/AAOS_Builder/<tt></tt>&lt;BUILD_NUMBER&gt;</tt></li>
+                          </p>
+                        ''')
                         triggers {
                           hudsonStartupTrigger {
                             nodeParameterName("")
@@ -506,7 +582,35 @@ spec:
                       }
                   - script: >
                       pipelineJob('Android/Builds/CTS Builder') {
-                        description('<p>Builds Android Compliance Test Suite test harness, rather than use standard Google release.<br/>CTS_Execution can then use this instead of default Android CTS test harness.</p>')
+                        description('''
+                          <p>This job builds the Android 
+                              <a href="https://source.android.com/docs/compatibility/cts" target="_blank">Compatibility Test Suite</a> (CTS) 
+                              from the provided source manifest.
+                              <br/>This can then be used in the <i>CTS Execution</i> pipeline instead of the 
+                              <a href="https://source.android.com/docs/compatibility/cts/downloads" target="_blank">google-released</a> 
+                              version of CTS already downloaded.
+                          </p>
+                          <p>The job runs the same code as the <i>AAOS Builder</i> job but with the following differences:</p>
+                          <ul>
+                              <li style="line-height:1.5">lunch target provided must be of the cuttlefish variety (i.e. must start with <tt>aosp_cf</tt>)</li>
+                              <li style="line-height:1.5">only the CTS package is built</li>
+                          </ul>  
+                          </p> 
+                          <p>The output of this job is the CTS package <tt>android-cts.zip</tt> which contains 
+                              <ul>
+                                  <li style="line-height:1.5"><a href="https://source.android.com/docs/core/tests/tradefed" target="_blank">CTS Trade Federataion</a> 
+                                    (<tt>cts-tradefed</tt>), the test harness for CTS</li>
+                                  <li style="line-height:1.5">The full suite of CTS tests (not including 
+                                    <a href="https://source.android.com/docs/compatibility/cts/verifier" target="_blank" title="CTS-Verifier: a set of CTS tests that must be run manually">CTS-V</a>
+                                        tests)
+                                  </li>
+                              </ul> 
+                          </p>
+                          <p>The CTS package zip file is stored in a google cloud storage bucket (see build artifact for location). </p>
+                          <p>To view artifacts on gcloud run the following command (<a href="https://cloud.google.com/docs/authentication/gcloud" target="_blank">sign in</a> first): 
+                                <br/><tt>gcloud storage ls gs://{{ .Values.config.projectID }}aaos/Android/Builds/CTS_Builder/<tt></tt>&lt;BUILD_NUMBER&gt;</tt></li>
+                          </p>
+                        ''')
                         triggers {
                           hudsonStartupTrigger {
                             nodeParameterName("")
@@ -537,7 +641,26 @@ spec:
                       }
                   - script: >
                       pipelineJob('Android/Builds/Gerrit') {
-                        description('<p>Gerrit triggered build and test.Triggered by Gerrit commits.</p>')
+                        description('''
+                          <p>This verification job is triggered by a Gerrit patchset change.
+                            <br/>Its purpose is to verify the integrity of the patchset change; it does this by 
+                              <ul>
+                                  <li style="line-height:1.5">building multiple targets (full target names derived from 
+                                    <a href="https://source.android.com/docs/setup/reference/build-numbers#source-code-tags-and-builds" target="_blank">
+                                        android tag</a>)</li>
+                                  <li style="line-height:1.5">spinning up 
+                                    <a href="https://source.android.com/docs/devices/cuttlefish" target="_blank" title="CVD">Cuttlefish Virtual Devices</a>
+                                    using the cuttlefish artifact</li>
+                                  <li style="line-height:1.5">performing a 
+                                    <a href="https://source.android.com/docs/compatibility/cts" target="_blank" title="Compatibility Test Suite">CTS</a>
+                                    run on the cuttlefish virtual devices</li>
+                              </ul>
+                          </p>
+                          <p>All build artifacts are stored in a google cloud storage bucket. Summaries (including locations) are stored as job artifacts.</p>
+                           <p>To view artifacts on gcloud run the following command (<a href="https://cloud.google.com/docs/authentication/gcloud" target="_blank">sign in</a> first): 
+                                <br/><tt>gcloud storage ls gs://{{ .Values.config.projectID }}aaos/Android/Builds/Gerrit/<tt></tt>&lt;BUILD_NUMBER&gt;</tt></li>
+                          </p>
+                        ''')
                         triggers {
                           hudsonStartupTrigger {
                             nodeParameterName("")
@@ -570,7 +693,44 @@ spec:
                       }
                   - script: >
                       pipelineJob('Android/Tests/CTS Execution') {
-                        description('<p>Run the CTS test harness against Cuttlefish Virtual Device images.</p>')
+                        description('''
+                          <p>This job allows users to execute the 
+                              <a href="https://source.android.com/docs/compatibility/cts" target="_blank">Compatibility Test Suite</a> (CTS)
+                              on their
+                              <a href="https://source.android.com/docs/devices/cuttlefish" target="_blank">Cuttlefish Virtual Device</a> (CVD)
+                              image builds.
+                          </p>
+                          
+                          <p>The job runs on a virtual machine instance<sup>*</sup> which is cuttlefish-ready and CTS-ready (all tools and files pre-installed).
+                            <br/><i><sup>*</sup>created from an instance template which is generated by the 'CF Instance Template' job</i> 
+
+                          <p>The desired number of cuttlefish virtual devices are spun up using the specified image.
+                          </p>
+                          <p>The Compatibility Test Suite is then performed on the virtual devices
+                              <ul>
+                                  <li style="line-height:1.5"><a href="https://source.android.com/docs/core/tests/tradefed" target="_blank">CTS Trade Federataion</a></i> 
+                                      (<tt>cts-tradefed</tt>) - the test harness for CTS - can distribute / shard the tests across the multiple virtual devices
+                                      
+                                  </li>
+                                  <li style="line-height:1.5">the CTS version is either the default 
+                                  <a href="https://source.android.com/docs/compatibility/cts/downloads" target="_blank">google-released</a> version or a test suite built by the <i>CTS Builder</i> job (if specified)</a></i>
+                                  </li>
+                                  <li style="line-height:1.5">the full CTS suite or a suite subset (in the form of a plan<sup>*</sup>)
+                                    can be run, or an individual module<sup>*</sup> can also be specified
+                                    <br/><sup>*</sup> lists of available plans and modules are included in the build artifacts. See 
+                                    <a href="https://source.android.com/docs/compatibility/cts/command-console-v2" target=""_blank">here</a> for more info.
+                              </ul>
+                          </p>
+                          <p>MTK Connect is used (optionally) so that users can view and/or interact with the virtual devices during testing (interaction during testing is not recommended).
+                              <br/>Access the MTK Connect Testbenches <a href="http://{{ .Values.config.domain }}/mtk-connect/portal/testbenches" target="_blank">here</a> (name: <tt>jobname_buildnumber</tt>).
+                          </p>
+                          <p>Test results are saved as build artifacts.</p>
+                          <p>Users can optionally keep the cuttlefish virtual devices alive for a certain amount of time after the CTS run has completed in order to facilitate debugging via MTK Connect. 
+                          <br/>This option is only available when MTK Connect is enabled. </p>
+                          <p><b>Note:</b> users are responsible for specifying a valid instance template - the job will hang if the specified template does not exist.
+                          <br/>Available instance templates can be viewed in the <a href="https://console.cloud.google.com/compute/instanceTemplates/list?inv=1&invt=Abqr1A&project={{ .Values.config.projectID }}" target="_blank">cloud console</a>.
+                          </p>
+                        ''')
                         logRotator {
                           artifactDaysToKeep({{ .Values.config.workloads.android.logRotation.artifactDaysToKeep }})
                           artifactNumToKeep({{ .Values.config.workloads.android.logRotation.artifactNumToKeep }})
@@ -595,7 +755,22 @@ spec:
                       }
                   - script: >
                       pipelineJob('Android/Tests/CVD Launcher') {
-                        description('<p>Launches Cuttlefish Virtual Devices (CVD) on the Cuttlefish Virtual Machine instances created by GCE from Cuttlefish instance templates</p>')
+                        description('''
+                          <p>This job is used to test 
+                              <a href="https://source.android.com/docs/devices/cuttlefish" target="_blank" title="Cuttlefish Virtual Device">CVD</a> 
+                              image builds by spinning up one or more virtual device(s) using the specified image.
+                          </p>
+                          <p>The job runs on a virtual machine instance<sup>*</sup> which is cuttlefish-ready  (all tools and files pre-installed).
+                              <br/><i><sup>*</sup>created from an instance template which is generated by the 'CF Instance Template' job</i> 
+                          </p>
+                          <p>Once the specified number of virtual devices have been initialised, they are kept alive for the required amount of time and then killed.</p>
+                          <p>MTK Connect is used so that users can view and/or interact with the virtual device(s) via UI and/or adb.
+                              <br/>Access the MTK Connect Testbenches <a href="http://{{ .Values.config.domain }}/mtk-connect/portal/testbenches" target="_blank">here</a> (name: <tt>jobname_buildnumber</tt>).
+                          </p>
+                          <p><b>Note:</b> users are responsible for specifying a valid instance template - the job will hang if the specified template does not exist.
+                          <br/>Available instance templates can be viewed in the <a href="https://console.cloud.google.com/compute/instanceTemplates/list?inv=1&invt=Abqr1A&project={{ .Values.config.projectID }}" target="_blank">cloud console</a>.
+                          </p>
+                        ''')
                         logRotator {
                           artifactDaysToKeep({{ .Values.config.workloads.android.logRotation.artifactDaysToKeep }})
                           artifactNumToKeep({{ .Values.config.workloads.android.logRotation.artifactNumToKeep }})
