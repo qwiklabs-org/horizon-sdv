@@ -23,6 +23,8 @@ One-time setup requirements.
 
 ## Environment Variables/Parameters <a name="environment-variables"></a>
 
+**Jenkins Parameters:** Defined in the respective pipeline jobs within `gitops/env/stage2/templates/jenkins.yaml` (CasC).
+
 ### `AAOS_GERRIT_MANIFEST_URL`
 
 This provides the URL for the Android repo manifest. Such as:
