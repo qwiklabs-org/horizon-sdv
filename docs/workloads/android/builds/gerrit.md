@@ -108,4 +108,4 @@ These are as follows:
 
 ## KNOWN ISSUES <a name="known-issues"></a>
 
-Refer to workloads/android/pipelines/builds/aaos_builder/README.md.
+Refer to `docs/workloads/android/builds/aaos_builder.md` for details.

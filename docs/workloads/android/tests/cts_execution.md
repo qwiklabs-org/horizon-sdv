@@ -122,7 +122,7 @@ It is only applicable when `MTK_CONNECT_ENABLE` is enabled.
 
 ## Example Usage <a name="examples"></a>
 
-Refer to `workloads/android/pipelines/tests/cvd_launcher/README.md` for an example of how to create and set up a test instance and boot the Cuttlefish Virtual Devices. Once the devices are booted, CTS tests can be run as follows:
+Refer to `docs/workloads/android/tests/cvd_launcher.md` for an example of how to create and set up a test instance and boot the Cuttlefish Virtual Devices. Once the devices are booted, CTS tests can be run as follows:
 
 
 ```
