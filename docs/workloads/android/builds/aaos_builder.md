@@ -36,6 +36,8 @@ One-time setup requirements.
 
 ## Environment Variables/Parameters <a name="environment-variables"></a>
 
+**Jenkins Parameters:** Defined in the respective pipeline jobs within `gitops/env/stage2/templates/jenkins.yaml` (CasC).
+
 ### `AAOS_GERRIT_MANIFEST_URL`
 
 This provides the URL for the Android repo manifest. Such as:
@@ -288,7 +290,7 @@ These are as follows:
 
     -   i.e. Unknown installed file for module `sv_2d_session_tests`/`sv_3d_session_tests`
 
-    -   Either [Revert](https://android.googlesource.com/platform/platform_testing/+/b608b75b5f2a5f614bd75599023a45f3c321d4a9 "https://android.googlesource.com/platform/platform_testing/+/b608b75b5f2a5f614bd75599023a45f3c321d4a9") commit, or download the revert change from Gerrit review:
+    -   Either [Revert](https://android.googlesource.com/platform/platform_testing/+/b608b75b5f2a5f614bd75599023a45f3c321d4a9 "https://android.googlesource.com/platform/platform_testing/+/b608b75b5f2a5f614bd75599023a45f3c321d4a9") commit, or download the revert change from Gerrit review, e.g. upstream Gerrit patchset:
 	    - `GERRIT_PROJECT=platform/platform_testing`
 	    - `GERRIT_CHANGE_NUMBER=3183939`
 	    - `GERRIT_PATCHSET_NUMBER=1`

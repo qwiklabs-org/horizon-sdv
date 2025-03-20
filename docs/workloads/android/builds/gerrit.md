@@ -47,22 +47,20 @@ To successfully run the pipeline, ensure that the referenced Cuttlefish instance
 
 The pipeline is triggered by a Gerrit patchset change based on Gerrit Triggers plugin. It uses the Horizon default path and branch name prefixes:
 - Project prefix path: `android` separates projects into Android workload.
-- Branch prefix: `horizon` and separates branch names from upstream branches.
+- Branch prefix path: `horizon` and separates branch names from upstream branches.
 
-The trigger for the job is configured in the Jenkinsfile as follows:
+The trigger for the job is configured in `gitops/env/stage2/templates/jenkins.yaml` (CasC), e.g.
 
 ```
-  triggers {
-    gerrit customUrl: '', gerritProjects: [[branches: [[compareType: 'ANT', pattern: '**/horizon/*']], compareType: 'REG_EXP', disableStrictForbiddenFileVerification: false, pattern: '^android\\/(?!.*\\/manifest).*$']], serverName: 'Gerrit', triggerOnEvents: [patchsetCreated()]
+triggers {
+  gerrit {
+    events {
+      patchsetCreated()
+    }
+    project('reg_exp:^android\\/(?!.*\\/manifest$).*', ['ant:**/horizon/*'])
   }
+}
 ```
-
-This trigger is created from within Jenkins as follows:
-- Branches matching the pattern `horizon` are triggered for projects with a pattern `android` and not the `manifest` project.
-    -   To create the trigger for use in the Jenkinsfile, you may update that manually or generate using Jenkins Declarative Directive Generator:
-        - `Sample Directive` -> `triggers: Triggers` -> `Add` -> `gerrit: Gerrit Event`
-        - Create the trigger you require and select `Generate Declarative Directive`
-        - Cut and paste the output into the Jenkinsfile.
 
 ## SYSTEM VARIABLES
 

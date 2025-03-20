@@ -34,6 +34,8 @@ One-time setup requirements.
 
 ## Environment Variables/Parameters <a name="environment-variables"></a>
 
+**Jenkins Parameters:** Defined in the respective pipeline jobs within `gitops/env/stage2/templates/jenkins.yaml` (CasC).
+
 ### `JENKINS_GCE_CLOUD_LABEL`
 
 This is the label that identifies the GCE Cloud label which will be used to identify the Cuttlefish VM instance, e.g.

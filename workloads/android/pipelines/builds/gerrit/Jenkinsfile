@@ -73,11 +73,9 @@ def kubernetesPodTemplate = """
 
 pipeline {
 
-  agent none
+  // Trigger defined in gitops/env/stage2/templates/jenkins.yaml (Jenkins CasC)
 
-  triggers {
-    gerrit customUrl: '', gerritProjects: [[branches: [[compareType: 'ANT', pattern: '**/horizon/*']], compareType: 'REG_EXP', disableStrictForbiddenFileVerification: false, pattern: '^android\\/(?!.*\\/manifest).*$']], serverName: 'Gerrit', triggerOnEvents: [patchsetCreated()]
-  }
+  agent none
 
   environment {
     // Ensure Gerrit Code Review knows the new Gerrit path.
