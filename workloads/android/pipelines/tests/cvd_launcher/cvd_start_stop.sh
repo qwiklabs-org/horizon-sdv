@@ -171,24 +171,27 @@ case "${1}" in
         # This works around CVD issues.
         # CVD can fail to boot any devices, so we retry start.
         # Refer to Google for the reasons why!
-        NUM_RETRIES=3
-        for (( i = 1; i <= NUM_RETRIES; i++ )); do
+        NUM_RETRIES=4
+        for (( i = 1; i <= NUM_RETRIES; ++i )); do
+            echo "Attempt ${i} of ${NUM_RETRIES} ..."
             cuttlefish_start
             cuttlefish_wait_for_device_booted
             cuttlefish_adb_restart
-            if (( BOOTED_INSTANCES > 0 )); then
+            if (( BOOTED_INSTANCES == NUM_INSTANCES )); then
                 break;
-            else
-                echo "Retry ${i} of ${NUM_RETRIES} ..."
             fi
         done
+
         if (( BOOTED_INSTANCES == 0 )); then
-            echo "Error: adb reboot failed, devices not booted."
+            echo "Error: android guest instances/devices not booted."
             # Stop and clean up
             cuttlefish_archive_logs
             cuttlefish_stop
             cuttlefish_cleanup
             exit 1
+        elif (( BOOTED_INSTANCES != NUM_INSTANCES )); then
+            echo "Warning: Only booted ${BOOTED_INSTANCES} of requested ${NUM_INSTANCES}!"
+            # Decide on whether to continue or exit 1. For now, continue.
         fi
         ;;
 esac
