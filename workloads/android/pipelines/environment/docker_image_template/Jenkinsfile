@@ -58,7 +58,7 @@ pipeline {
       steps {
         container(name: 'kaniko') {
           script {
-            currentBuild.description = "$BUILD_USER"
+            currentBuild.description = "NO_PUSH=${env.NO_PUSH}" + "<br>" + "$BUILD_USER"
           }
           sh '''
             # Build the docker image and push to Artifact registry using service account configured with
