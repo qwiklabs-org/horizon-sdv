@@ -62,7 +62,7 @@ pipeline {
       steps {
         container(name: 'builder') {
           script {
-            currentBuild.description = "$BUILD_USER"
+            currentBuild.description = "Revision: ${env.ANDROID_CUTTLEFISH_REVISION}" + "<br/>" + "$BUILD_USER"
           }
           sh '''
             BOOT_DISK_SIZE="${BOOT_DISK_SIZE}" \
