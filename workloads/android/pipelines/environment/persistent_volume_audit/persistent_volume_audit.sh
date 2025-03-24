@@ -164,12 +164,12 @@ delete_resources() {
         done
         for disk in "${GCE_PV[@]}"; do
             echo "Deleting Disk: $disk"
-            yes Y | gcloud compute disks delete "$disk" --zones="${ZONE}"
+            yes Y | gcloud compute disks delete "$disk" --zone="${ZONE}"
         done
     elif [ "$1" == "DELETE_GCE" ]; then
         for disk in "${GCE_ONLY[@]}"; do
             echo "Deleting Disk: $disk"
-            yes Y | gcloud compute disks delete "$disk" --zones="${ZONE}"
+            yes Y | gcloud compute disks delete "$disk" --zone="${ZONE}"
         done
     elif [ "$1" == "DELETE_K8S" ]; then
         for pv in "${K8S_ONLY[@]}"; do
