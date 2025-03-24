@@ -160,7 +160,7 @@ delete_resources() {
     if [ "$1" == "DELETE_ALL" ]; then
         for pv in "${K8S_PV[@]}"; do
             echo "Deleting PV: $pv"
-            kubectl delete pv "$pv" -n "${ZONE}"
+            kubectl delete pv "$pv" -n "${JENKINS_NAMESPACE}"
         done
         for disk in "${GCE_PV[@]}"; do
             echo "Deleting Disk: $disk"
@@ -174,7 +174,7 @@ delete_resources() {
     elif [ "$1" == "DELETE_K8S" ]; then
         for pv in "${K8S_ONLY[@]}"; do
             echo "Deleting PV: $pv"
-            kubectl delete pv "$pv" -n "${ZONE}"
+            kubectl delete pv "$pv" -n "${JENKINS_NAMESPACE}"
         done
     fi
 }
