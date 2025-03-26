@@ -78,6 +78,10 @@ pipeline {
 
   agent none
 
+  environment {
+    GERRIT_API_URL="https://${env.HORIZON_DOMAIN}/gerrit"
+  }
+
   stages {
     stage ('Start VM Instance') {
       agent { kubernetes { yaml kubernetesPodTemplate } }
@@ -133,6 +137,7 @@ pipeline {
                     AAOS_REVISION="${AAOS_REVISION}" \
                     AAOS_LUNCH_TARGET="${AAOS_LUNCH_TARGET}" \
                     AAOS_CLEAN="NO_CLEAN" \
+                    GERRIT_SERVER_URL="${GERRIT_API_URL}" \
                     POST_REPO_INITIALISE_COMMAND="${POST_REPO_INITIALISE_COMMAND}" \
                     POST_REPO_SYNC_COMMAND="${POST_REPO_SYNC_COMMAND}" \
                     REPO_SYNC_JOBS="${GERRIT_REPO_SYNC_JOBS}" \
