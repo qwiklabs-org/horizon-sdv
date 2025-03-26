@@ -102,7 +102,19 @@ if [[ -n "${GERRIT_PROJECT}" && -n "${GERRIT_CHANGE_NUMBER}" && -n "${GERRIT_PAT
     # Use standard git fetch to retrieve the change.
     # Find the project name from the manifest.
     PROJECT_PATH=$(repo list -p "${GERRIT_PROJECT}")
+
+    # Derive the Gerrit URL from the manifest URL.
+    #   Horizon SDV uses path based URL whereas Google Android does not.
     PROJECT_URL=$(echo "${AAOS_GERRIT_MANIFEST_URL}" | cut -d'/' -f1-4)/"${GERRIT_PROJECT}"
+    # Test URL with path.
+    if ! curl -s -f -o /dev/null "${PROJECT_URL}"; then
+        # URL with no path.
+        PROJECT_URL=$(echo "${AAOS_GERRIT_MANIFEST_URL}" | cut -d'/' -f1-3)/"${GERRIT_PROJECT}"
+        if ! curl -s -f -o /dev/null "${PROJECT_URL}"; then
+            echo "ERROR: Project ${PROJECT_URL} not found"
+            exit 1
+        fi
+    fi
 
     # Extract the last two digits of the change number.
     if (( ${#GERRIT_CHANGE_NUMBER} > 2 )); then
