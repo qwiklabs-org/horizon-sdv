@@ -105,15 +105,11 @@ if [[ -n "${GERRIT_PROJECT}" && -n "${GERRIT_CHANGE_NUMBER}" && -n "${GERRIT_PAT
 
     # Derive the Gerrit URL from the manifest URL.
     #   Horizon SDV uses path based URL whereas Google Android does not.
-    PROJECT_URL=$(echo "${AAOS_GERRIT_MANIFEST_URL}" | cut -d'/' -f1-4)/"${GERRIT_PROJECT}"
-    # Test URL with path.
+    PROJECT_URL=$(echo "${AAOS_GERRIT_MANIFEST_URL}" | cut -d'/' -f1-3)/"${GERRIT_PROJECT}"
+    # Test URL with no path
     if ! curl -s -f -o /dev/null "${PROJECT_URL}"; then
-        # URL with no path.
-        PROJECT_URL=$(echo "${AAOS_GERRIT_MANIFEST_URL}" | cut -d'/' -f1-3)/"${GERRIT_PROJECT}"
-        if ! curl -s -f -o /dev/null "${PROJECT_URL}"; then
-            echo "ERROR: Project ${PROJECT_URL} not found"
-            exit 1
-        fi
+        # Default
+        PROJECT_URL=$(echo "${AAOS_GERRIT_MANIFEST_URL}" | cut -d'/' -f1-4)/"${GERRIT_PROJECT}"
     fi
 
     # Extract the last two digits of the change number.
