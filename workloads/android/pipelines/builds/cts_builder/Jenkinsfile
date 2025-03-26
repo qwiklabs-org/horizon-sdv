@@ -79,6 +79,10 @@ pipeline {
 
   agent none
 
+  environment {
+    GERRIT_API_URL="https://${env.HORIZON_DOMAIN}/gerrit"
+  }
+
   stages {
     stage ('Start VM Instance') {
       agent { kubernetes { yaml kubernetesPodTemplate } }
@@ -112,7 +116,7 @@ pipeline {
             allOf {
               expression { env.AAOS_LUNCH_TARGET }
               expression { env.AAOS_LUNCH_TARGET =~ /(aosp_cf)/ }
-	      expression { currentBuild.currentResult == 'SUCCESS' }
+              expression { currentBuild.currentResult == 'SUCCESS' }
             }
           }
           steps {
@@ -137,6 +141,7 @@ pipeline {
                     AAOS_RPI_REVISION="${AAOS_RPI_REVISION}" \
                     AAOS_LUNCH_TARGET="${AAOS_LUNCH_TARGET}" \
                     AAOS_CLEAN="NO_CLEAN" \
+                    GERRIT_SERVER_URL="${GERRIT_API_URL}" \
                     REPO_SYNC_JOBS="${GERRIT_REPO_SYNC_JOBS}" \
                     ./workloads/android/pipelines/builds/aaos_builder/aaos_initialise.sh
                   '''

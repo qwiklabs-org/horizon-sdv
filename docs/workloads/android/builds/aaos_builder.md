@@ -190,6 +190,7 @@ Example 2: Initialise the repos for `aosp_tangorpro_car-ap1a-userdebug` with Ger
 AAOS_GERRIT_MANIFEST_URL=https://dev.horizon-sdv.com/gerrit/android/platform/manifest \
 AAOS_REVISION=horizon/android-14.0.0_r30 \
 AAOS_LUNCH_TARGET=aosp_tangorpro_car-ap1a-userdebug \
+GERRIT_SERVER_URL=https://dev.horizon-sdv.com/gerrit \
 GERRIT_CHANGE_NUMBER=82 \
 GERRIT_PATCHSET_NUMBER=1 \
 GERRIT_PROJECT=android/platform/packages/services/Car \

@@ -39,6 +39,7 @@
 #        repo sync.
 #
 # For Gerrit review change sets:
+#  - GERRIT_SERVER_URL: URL of Gerrit server.
 #  - GERRIT_PROJECT: the name of the project to download.
 #  - GERRIT_CHANGE_NUMBER: the change number of the changeset to download.
 #  - GERRIT_PATCHSET_NUMBER: the patchset number of the changeset to download.
@@ -362,6 +363,10 @@ if [ -n "${OVERRIDE_MAKE_COMMAND}" ]; then
 fi
 
 # Gerrit Review environment variables: remove leading and trailing slashes.
+GERRIT_SERVER_URL=$(echo "${GERRIT_SERVER_URL}" | xargs)
+GERRIT_SERVER_URL=${GERRIT_SERVER_URL:-https://dev.horizon-sdv.com/gerrit}
+# Strip any trailing slashes as this can impact on the download URL.
+GERRIT_SERVER_URL=${GERRIT_SERVER_URL%/}
 GERRIT_PROJECT=$(echo "${GERRIT_PROJECT}" | xargs)
 GERRIT_CHANGE_NUMBER=$(echo "${GERRIT_CHANGE_NUMBER}" | xargs)
 GERRIT_PATCHSET_NUMBER=$(echo "${GERRIT_PATCHSET_NUMBER}" | xargs)
