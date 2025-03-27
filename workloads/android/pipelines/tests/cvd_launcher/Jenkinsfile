@@ -61,6 +61,7 @@ pipeline {
               script { env.VM_NODE_NAME = env.NODE_NAME }
               sh '''
                 CUTTLEFISH_DOWNLOAD_URL="${CUTTLEFISH_DOWNLOAD_URL}" \
+                CUTTLEFISH_INSTALL_WIFI="${CUTTLEFISH_INSTALL_WIFI}" \
                 CUTTLEFISH_MAX_BOOT_TIME="${CUTTLEFISH_MAX_BOOT_TIME}" \
                 NUM_INSTANCES="${NUM_INSTANCES}" \
                 VM_CPUS="${VM_CPUS}" \
