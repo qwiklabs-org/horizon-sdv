@@ -36,6 +36,8 @@ declare BOOTED_INSTANCES=0
 
 # CVD log file.
 declare -r logfile="${WORKSPACE}"/cvd-"${BUILD_NUMBER}".log
+# WiFi device status
+declare -r wifilogfile="${WORKSPACE}"/wifi_connection_status.log
 
 # Download CVD host package and Cuttlefish AVD artifacts
 function cuttlefish_extract_artifacts() {
@@ -97,11 +99,13 @@ function cuttlefish_start() {
       --memory_mb "${VM_MEMORY_MB}" > "${logfile}" 2>&1 &
 }
 
-# Install Wifu
+# Install WiFi
 function cuttlefish_install_wifi() {
     cd "${HOME}"/cf || exit
 
     if [ -f "${WIFI_APK_NAME}" ]; then
+
+        echo "WiFi Device Summary:" | tee "${wifilogfile}"
 
         # shellcheck disable=SC2207
         DEVICES=($(adb devices | grep -E '0.+device$' | cut -f1))
@@ -112,23 +116,22 @@ function cuttlefish_install_wifi() {
             echo "Enabling WiFi service on ${device}"
             adb -s "${device}" shell su root svc wifi enable
 
-            # Future: filter such as SSID
-            echo "WiFi status on ${device}"
-            echo "================================================="
-            adb -s "${device}" shell su root dumpsys wifi
-            echo "================================================="
-
             echo "Connecting WiFi to Network on ${device}"
-            adb -s "${device}" shell am instrument -e method "connectToNetwork" -e scan_ssid "false" -e ssid "VirtWifi" -w com.android.tradefed.utils.wifi/.WifiUtil | tee wifi.log
-            if ! grep -E -q "INSTRUMENTATION_RESULT.*result=true" wifi.log
+            adb -s "${device}" shell am instrument -e method "connectToNetwork" -e scan_ssid "false" -e ssid "VirtWifi" -w com.android.tradefed.utils.wifi/.WifiUtil | tee connection_result.log
+            if ! grep -E -q "INSTRUMENTATION_RESULT.*result=true" connection_result.log
             then
-                echo "ERROR: failed to connect to wifi on ${device}"
-                # exit 1
+                echo "${device}: Failed to connect to wifi" | tee -a "${wifilogfile}"
+                connection_result=$(grep "INSTRUMENTATION_RESULT:" connection_result.log)
+                if [ -n "${connection_result}" ]; then
+                    echo "    ${connection_result}" | tee -a "${wifilogfile}"
+                fi
+            else
+                echo "${device}: Successfully connected to wifi" | tee -a "${wifilogfile}"
             fi
 
-            echo "WiFi status post connect on ${device}"
+            echo "WiFi status on ${device}"
             echo "================================================="
-            adb -s "${device}" shell su root dumpsys wifi
+            adb -s "${device}" shell su root dumpsys wifi | grep "current SSID"
             echo "================================================="
         done
     else
