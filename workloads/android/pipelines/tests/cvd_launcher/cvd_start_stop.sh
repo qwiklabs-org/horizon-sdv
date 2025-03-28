@@ -46,10 +46,14 @@ function cuttlefish_extract_artifacts() {
         gs://*)
             gsutil cp "${CUTTLEFISH_DOWNLOAD_URL}"/cvd-host_package.tar.gz .
             gsutil cp "${CUTTLEFISH_DOWNLOAD_URL}"/aosp_cf_"${ARCHITECTURE}"_auto-img*.zip .
+            # Allow this to fail.
+            gsutil cp "${CUTTLEFISH_DOWNLOAD_URL}/${WIFI_APK_NAME}" . >/dev/null 2>&1 || true
             ;;
         *)
             wget -nv "${CUTTLEFISH_DOWNLOAD_URL}"/cvd-host_package.tar.gz .
             wget -r -nd -nv --no-parent -A "aosp_cf_${ARCHITECTURE}_auto-img*.zip" "${CUTTLEFISH_DOWNLOAD_URL}"/
+            # Allow this to fail.
+            wget -nv "${CUTTLEFISH_DOWNLOAD_URL}/${WIFI_APK_NAME}" . > /dev/null 2>&1 || true
             ;;
     esac
 
@@ -91,6 +95,45 @@ function cuttlefish_start() {
       -report_anonymous_usage_stats=no \
       --num-instances="${NUM_INSTANCES}" --cpus "${VM_CPUS}" \
       --memory_mb "${VM_MEMORY_MB}" > "${logfile}" 2>&1 &
+}
+
+# Install Wifu
+function cuttlefish_install_wifi() {
+    cd "${HOME}"/cf || exit
+
+    if [ -f "${WIFI_APK_NAME}" ]; then
+
+        # shellcheck disable=SC2207
+        DEVICES=($(adb devices | grep -E '0.+device$' | cut -f1))
+        for device in "${DEVICES[@]}"; do
+            echo "Installing ${WIFI_APK_NAME} on ${device}"
+            adb -s "${device}" install -g -r "${WIFI_APK_NAME}"
+
+            echo "Enabling WiFi service on ${device}"
+            adb -s "${device}" shell su root svc wifi enable
+
+            # Future: filter such as SSID
+            echo "WiFi status on ${device}"
+            echo "================================================="
+            adb -s "${device}" shell su root dumpsys wifi
+            echo "================================================="
+
+            echo "Connecting WiFi to Network on ${device}"
+            adb -s "${device}" shell am instrument -e method "connectToNetwork" -e scan_ssid "false" -e ssid "VirtWifi" -w com.android.tradefed.utils.wifi/.WifiUtil | tee wifi.log
+            if ! grep -E -q "INSTRUMENTATION_RESULT.*result=true" wifi.log
+            then
+                echo "ERROR: failed to connect to wifi on ${device}"
+                # exit 1
+            fi
+
+            echo "WiFi status post connect on ${device}"
+            echo "================================================="
+            adb -s "${device}" shell su root dumpsys wifi
+            echo "================================================="
+        done
+    else
+        echo "Unable to find ${WIFI_APK_NAME}"
+    fi
 }
 
 # Wait for device to boot (VIRTUAL_DEVICE_BOOT_COMPLETED) or timeout.
@@ -190,8 +233,12 @@ case "${1}" in
             cuttlefish_cleanup
             exit 1
         elif (( BOOTED_INSTANCES != NUM_INSTANCES )); then
-            echo "Warning: Only booted ${BOOTED_INSTANCES} of requested ${NUM_INSTANCES}!"
-            # Decide on whether to continue or exit 1. For now, continue.
+            echo "ERROR: Only booted ${BOOTED_INSTANCES} of requested ${NUM_INSTANCES}!"
+            echo "       Terminating."
+            exit 1
+        fi
+        if [[ "${CUTTLEFISH_INSTALL_WIFI}" == "true" ]]; then
+            cuttlefish_install_wifi
         fi
         ;;
 esac

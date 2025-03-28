@@ -975,6 +975,13 @@ spec:
                             trim(true)
                           }
 
+                          booleanParam {
+                            name('CUTTLEFISH_INSTALL_WIFI')
+                            defaultValue(false)
+                            description('''<p>Enable if wishing to install Wifi on the Cuttlefish Virtual Devices.<br/>
+                              <b>WARNING:</b> Feature is experimental, impacts on performance and results differ per revision of Android.</p>''')
+                          }
+
                           choiceParam {
                             name('ANDROID_VERSION')
                             choices(['14', '15'])
@@ -1014,7 +1021,7 @@ spec:
 
                           stringParam {
                             name('NUM_INSTANCES')
-                            defaultValue('10')
+                            defaultValue('8')
                             description('''<p>Number of guest instances to launch (num-instances option)</p>''')
                             trim(true)
                           }
@@ -1113,6 +1120,13 @@ spec:
                             defaultValue('')
                             description('''<p>Storage URL pointing to the location of the Cuttlefish Virtual Device images and host packages, e.g.<br/>gs://{{ .Values.config.projectID }}-aaos/Android/Builds/AAOS_Builder/&lt;BUILD_NUMBER&gt;</p>''')
                             trim(true)
+                          }
+
+                          booleanParam {
+                            name('CUTTLEFISH_INSTALL_WIFI')
+                            defaultValue(false)
+                            description('''<p>Enable if wishing to install Wifi on the Cuttlefish Virtual Devices.<br/>
+                              <b>WARNING:</b> Feature is experimental, impacts on performance and results differ per revision of Android.</p>''')
                           }
 
                           stringParam {
