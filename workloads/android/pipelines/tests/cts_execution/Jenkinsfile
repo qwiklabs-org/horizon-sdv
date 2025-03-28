@@ -68,6 +68,8 @@ pipeline {
                 ./workloads/android/pipelines/tests/cvd_launcher/cvd_start_stop.sh --start
               '''
             }
+            archiveArtifacts artifacts: 'wifi*.log', followSymlinks: false, onlyIfSuccessful: false, allowEmptyArchive: true
+
           }
         }
 

@@ -978,8 +978,10 @@ spec:
                           booleanParam {
                             name('CUTTLEFISH_INSTALL_WIFI')
                             defaultValue(false)
-                            description('''<p>Enable if wishing to install Wifi on the Cuttlefish Virtual Devices.<br/>
-                              <b>WARNING:</b> Feature is experimental, impacts on performance and results differ per revision of Android.</p>''')
+                            description('''<p>Enable if wishing to install Wifi on the Cuttlefish Virtual Devices.<br/><br/>
+                              <b>Note:</b>
+                              <ul><li>Feature is experimental, impacts on performance and results differ per revision of Android.</li>
+                              <li>Refer to <code>wifi_connection_status.log</code> artifact to check device connectivity.</li></ul></p>''')
                           }
 
                           choiceParam {
@@ -1125,8 +1127,10 @@ spec:
                           booleanParam {
                             name('CUTTLEFISH_INSTALL_WIFI')
                             defaultValue(false)
-                            description('''<p>Enable if wishing to install Wifi on the Cuttlefish Virtual Devices.<br/>
-                              <b>WARNING:</b> Feature is experimental, impacts on performance and results differ per revision of Android.</p>''')
+                            description('''<p>Enable if wishing to install Wifi on the Cuttlefish Virtual Devices.<br/><br/>
+                              <b>Note:</b>
+                              <ul><li>Feature is experimental, impacts on performance and results differ per revision of Android.</li>
+                              <li>Refer to <code>wifi_connection_status.log</code> artifact to check device connectivity.</li></ul></p>''')
                           }
 
                           stringParam {
