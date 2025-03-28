@@ -45,6 +45,7 @@ The Android revision, i.e. branch or tag to build. Tested versions are below:
 - `android-14.0.0_r74` (ap2a, refer to Known Issues)
 - `android-15.0.0_r4` (ap3a)
 - `android-15.0.0_r10` (ap4a)
+- `android-15.0.0_r20` (bp1a)
 
 ### `AAOS_LUNCH_TARGET` <a name="targets"></a>
 
@@ -60,11 +61,13 @@ Examples:
     -   `aosp_cf_x86_64_auto-ap2a-userdebug`
     -   `aosp_cf_x86_64_auto-ap3a-userdebug`
     -   `aosp_cf_x86_64_auto-ap4a-userdebug`
+    -   `aosp_cf_x86_64_auto-bp1a-userdebug`
     -   `aosp_cf_arm64_auto-userdebug`
     -   `aosp_cf_arm64_auto-ap1a-userdebug`
     -   `aosp_cf_arm64_auto-ap2a-userdebug`
     -   `aosp_cf_arm64_auto-ap3a-userdebug`
     -   `aosp_cf_arm64_auto-ap4a-userdebug`
+    -   `aosp_cf_arm64_auto-bp1a-userdebug`
 
 ### `AAOS_CLEAN`
 
