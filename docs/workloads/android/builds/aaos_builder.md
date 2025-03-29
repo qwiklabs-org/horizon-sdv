@@ -58,6 +58,7 @@ The Android revision, i.e. branch or tag to build. Tested versions are below:
 - `android-14.0.0_r74` (ap2a, refer to Known Issues)
 - `android-15.0.0_r4` (ap3a)
 - `android-15.0.0_r10` (ap4a)
+- `android-15.0.0_r20` (bp1a)
 
 ### `AAOS_LUNCH_TARGET` <a name="targets"></a>
 
@@ -73,27 +74,33 @@ Examples:
     -   `sdk_car_x86_64-ap2a-userdebug`
     -   `sdk_car_x86_64-ap3a-userdebug`
     -   `sdk_car_x86_64-ap4a-userdebug`
+    -   `sdk_car_x86_64-bp1a-userdebug`
     -   `sdk_car_arm64-userdebug`
     -   `sdk_car_arm64-ap1a-userdebug`
     -   `sdk_car_arm64-ap2a-userdebug`
     -   `sdk_car_arm64-ap3a-userdebug`
     -   `sdk_car_arm64-ap4a-userdebug`
+    -   `sdk_car_arm64-bp1a-userdebug`
     -   `aosp_cf_x86_64_auto-userdebug`
     -   `aosp_cf_x86_64_auto-ap1a-userdebug`
     -   `aosp_cf_x86_64_auto-ap2a-userdebug`
     -   `aosp_cf_x86_64_auto-ap3a-userdebug`
     -   `aosp_cf_x86_64_auto-ap4a-userdebug`
+    -   `aosp_cf_x86_64_auto-bp1a-userdebug`
     -   `aosp_cf_arm64_auto-userdebug`
     -   `aosp_cf_arm64_auto-ap1a-userdebug`
     -   `aosp_cf_arm64_auto-ap2a-userdebug`
     -   `aosp_cf_arm64_auto-ap3a-userdebug`
     -   `aosp_cf_arm64_auto-ap4a-userdebug`
+    -   `aosp_cf_arm64_auto-bp1a-userdebug`
 -   Pixel Devices:
     -   `aosp_tangorpro_car-ap1a-userdebug`
     -   `aosp_tangorpro_car-ap2a-userdebug`
     -   `aosp_tangorpro_car-ap3a-userdebug`
+    -   `aosp_tangorpro_car-ap4a-userdebug`
+    -   `aosp_tangorpro_car-bp1a-userdebug`
 -   Raspberry Pi:
-    -   `aosp_rpi5_car-ap3a-userdebug`
+    -   `aosp_rpi5_car-bp1a-userdebug`
 
 ### `ANDROID_VERSION`
 

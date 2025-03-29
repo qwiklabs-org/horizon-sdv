@@ -76,14 +76,14 @@ AAOS_DEFAULT_REVISION=${AAOS_DEFAULT_REVISION:-android-14.0.0_r30}
 AAOS_REVISION=${AAOS_REVISION:-${AAOS_DEFAULT_REVISION}}
 AAOS_REVISION=$(echo "${AAOS_REVISION}" | xargs)
 
-# RPi Revision: must align with Google branch / tag - all bets are off otherwise!
-AAOS_RPI_REVISION=${AAOS_REVISION:-android-15.0.0_r4}
+# RPi Revision (Vanilla RPi)
+AAOS_RPI_REVISION="android-15.0"
 
 # Gerrit AAOS and RPi manifest URLs.
 AAOS_GERRIT_MANIFEST_URL=$(echo "${AAOS_GERRIT_MANIFEST_URL}" | xargs)
 AAOS_GERRIT_MANIFEST_URL=${AAOS_GERRIT_MANIFEST_URL:-https://android.googlesource.com/platform/manifest}
 AAOS_GERRIT_RPI_MANIFEST_URL=$(echo "${AAOS_GERRIT_RPI_MANIFEST_URL}" | xargs)
-AAOS_GERRIT_RPI_MANIFEST_URL=${AAOS_GERRIT_RPI_MANIFEST_URL:-https://raw.githubusercontent.com/raspberry-vanilla/android_local_manifest/}
+AAOS_GERRIT_RPI_MANIFEST_URL=${AAOS_GERRIT_RPI_MANIFEST_URL:-https://raw.githubusercontent.com/raspberry-vanilla/android_local_manifest}
 
 # Google Repo Sync parallel jobs value
 REPO_SYNC_JOBS=${REPO_SYNC_JOBS:-2}
@@ -299,7 +299,7 @@ case "${AAOS_LUNCH_TARGET}" in
             "${OUT_DIR}.tgz"
         )
         AAOS_MAKE_CMDLINE="m && m android.hardware.automotive.vehicle@2.0-default-service android.hardware.automotive.audiocontrol-service.example"
-        # Pixel Tablet binaries for Android ap1a/ap2a/ap3a
+        # Pixel Tablet binaries for Android ap1a/ap2a/ap3a/ap4a/bp1a
         case "${AAOS_LUNCH_TARGET}" in
             *ap2a*)
                 POST_REPO_SYNC_COMMANDS_LIST=(
@@ -310,6 +310,18 @@ case "${AAOS_LUNCH_TARGET}" in
             *ap3a*)
                 POST_REPO_SYNC_COMMANDS_LIST=(
                     "curl --output - https://dl.google.com/dl/android/aosp/google_devices-tangorpro-ap3a.241105.007-2bf56572.tgz | tar -xzvf - "
+                    "tail -n +315 extract-google_devices-tangorpro.sh | tar -zxvf -"
+                )
+                ;;
+            *ap4a*)
+                POST_REPO_SYNC_COMMANDS_LIST=(
+                    "curl --output - https://dl.google.com/dl/android/aosp/google_devices-tangorpro-ap4a.250205.002-6474e704.tgz | tar -xzvf - "
+                    "tail -n +315 extract-google_devices-tangorpro.sh | tar -zxvf -"
+                )
+                ;;
+            *bp1a*)
+                POST_REPO_SYNC_COMMANDS_LIST=(
+                    "curl --output - https://dl.google.com/dl/android/aosp/google_devices-tangorpro-bp1a.250305.020.t2-636db283.tgz | tar -xzvf - "
                     "tail -n +315 extract-google_devices-tangorpro.sh | tar -zxvf -"
                 )
                 ;;
