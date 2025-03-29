@@ -45,7 +45,7 @@ def kubernetesPodTemplate = """
       command:
       - sleep
       args:
-      - 4h
+      - 8h
       resources:
         limits:
           cpu: 96000m
