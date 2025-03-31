@@ -1015,7 +1015,7 @@ spec:
 
                           stringParam {
                             name('CUTTLEFISH_MAX_BOOT_TIME')
-                            defaultValue('300')
+                            defaultValue('180')
                             description('''<p>Android Cuttlefish max boot time in seconds.<br/>
                                Wait on VIRTUAL_DEVICE_BOOT_COMPLETED across devices.</p>''')
                             trim(true)
@@ -1135,7 +1135,7 @@ spec:
 
                           stringParam {
                             name('CUTTLEFISH_MAX_BOOT_TIME')
-                            defaultValue('300')
+                            defaultValue('180')
                             description('''<p>Android Cuttlefish max boot time in seconds.<br/>
                                Wait on VIRTUAL_DEVICE_BOOT_COMPLETED across devices.</p>''')
                             trim(true)

@@ -237,12 +237,6 @@ declare -a POST_STORAGE_COMMANDS=(
     "rm -f ${BUILD_INFO_FILE}"
 )
 
-# Cuttlefish default Wifi APK
-WIFI_APK_NAME="WifiUtil.apk"
-WIFI_APK_MOVE="cp -f horizon_wifi/res/apks/wifiutil/${WIFI_APK_NAME} . ; rm -rf horizon_wifi"
-WIFI_APK_FETCH="git clone https://android.googlesource.com/platform/tools/tradefederation --depth=1 -b android-14.0.0_r30 horizon_wifi && ${WIFI_APK_MOVE}"
-WIFI_APK_PATH="tools/tradefederation/core/res/apks/wifiutil/"
-
 # This is a dictionary mapping the target names to the command line
 # to build the image.
 case "${AAOS_LUNCH_TARGET}" in
@@ -276,6 +270,14 @@ case "${AAOS_LUNCH_TARGET}" in
         ;;
     aosp_cf*)
         AAOS_MAKE_CMDLINE="m dist"
+
+        WIFI_APK_NAME="WifiUtil.apk"
+
+        # Fallback Wifi APK
+        WIFI_APK_FALLBACK_CMD="git clone https://android.googlesource.com/platform/tools/tradefederation --depth=1 -b android-14.0.0_r30 horizon_wifi && cp -f horizon_wifi/res/apks/wifiutil/${WIFI_APK_NAME} . ; rm -rf horizon_wifi"
+        # Trade Federation Wifi APK from repo.
+        WIFI_APK_PATH_NAME="tools/tradefederation/core/res/apks/wifiutil/${WIFI_APK_NAME}"
+
         AAOS_ARTIFACT_LIST+=(
             "${OUT_DIR}/dist/cvd-host_package.tar.gz"
             "${OUT_DIR}/dist/sbom/sbom.spdx.json"
@@ -283,8 +285,9 @@ case "${AAOS_LUNCH_TARGET}" in
             "${WIFI_APK_NAME}"
         )
         POST_BUILD_COMMANDS=(
-            "[ -f ${WIFI_APK_PATH}/${WIFI_APK_NAME} ] && cp -f ${WIFI_APK_PATH}/${WIFI_APK_NAME} . || ${WIFI_APK_FETCH}"
+            "[ -f ${WIFI_APK_PATH_NAME} ] && cp -f ${WIFI_APK_PATH_NAME} . || ${WIFI_APK_FALLBACK_CMD}"
         )
+
         # If the AAOS_BUILD_CTS variable is set, build only the cts image.
         if [[ "$AAOS_BUILD_CTS" -eq 1 ]]; then
             AAOS_MAKE_CMDLINE="m cts -j16"

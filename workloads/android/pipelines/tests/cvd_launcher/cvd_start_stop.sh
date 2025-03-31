@@ -164,12 +164,12 @@ function cuttlefish_adb_restart() {
         echo "    Recheck post adb server restart ..."
     fi
     # Allow system time to settle.
-    echo "    Sleep 90 seconds"
+    echo "    Sleep 30 seconds"
     # Ensure adb devices show devices.
     sudo adb kill-server || true
-    sleep 30
+    sleep 10
     sudo adb start-server || true
-    sleep 60
+    sleep 20
     BOOTED_INSTANCES=$(adb devices | grep -c -E '0.+device$')
     echo "    Booted ${BOOTED_INSTANCES} instances of ${NUM_INSTANCES} post adb restart."
 }
