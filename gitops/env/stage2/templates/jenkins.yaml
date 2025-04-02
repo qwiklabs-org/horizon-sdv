@@ -612,6 +612,62 @@ spec:
                         }
                       }
                   - script: >
+                      pipelineJob('Android/Environment/Warm Build Caches') {
+                        description('''
+                          <br/><h3 style="margin-bottom: 10px;">Warm Build Caches Job</h3>
+                          <p>This job is designed to accelerate build times by pre-populating the build caches, specifically the persistent volumes, in advance. It achieves this by executing a series of standard builds based on the selected manifest and revision.</p>
+                          <h4 style="margin-bottom: 10px;">Important Notes</h4>
+                          <ul><li>Ensure all Build PVs are deleted before running this job.</li>
+                          <li>Gerrit manifest and revision can be changed, together with targets, but refer to <code>Jenkinsfile</code> for details as to how these are managed.</li>
+                          <li>Plan to run the jobs in parallel to create sufficient PVs (note: k8s cap of 20)</li></ul>
+                          <br/><div style="border-top: 1px solid #ccc; width: 100%;"></div><br/>''')
+
+                        parameters {
+                          stringParam {
+                            name('AAOS_GERRIT_MANIFEST_URL')
+                            defaultValue('https://{{ .Values.config.domain }}/gerrit/android/platform/manifest')
+                            description('''<p>Android Manifest URL.</p>''')
+                            trim(true)
+                          }
+
+                          stringParam {
+                            name('AAOS_REVISION')
+                            defaultValue('horizon/android-14.0.0_r30')
+                            description('''<p>Android revision tag/branch name.</p>''')
+                            trim(true)
+                          }
+
+                          booleanParam {
+                            name('ARCHIVE_ARTIFACTS')
+                            defaultValue(false)
+                            description('''<p>Enable if wishing to store build artifacts to bucket</p>''')
+                          }
+                        }
+
+                        logRotator {
+                          artifactDaysToKeep({{ .Values.config.workloads.android.logRotation.artifactDaysToKeep }})
+                          artifactNumToKeep({{ .Values.config.workloads.android.logRotation.artifactNumToKeep }})
+                          daysToKeep({{ .Values.config.workloads.android.logRotation.daysToKeep }})
+                          numToKeep({{ .Values.config.workloads.android.logRotation.numToKeep }})
+                        }
+
+                        definition {
+                          cpsScm {
+                            lightweight()
+                            scm {
+                              git {
+                                remote {
+                                  url('{{ .Values.config.workloads.android.url }}')
+                                  credentials('jenkins-github-creds')
+                                }
+                                branch('*/{{ .Values.config.workloads.android.branch }}')
+                              }
+                            }
+                            scriptPath('workloads/android/pipelines/environment/warm_build_caches/Jenkinsfile')
+                          }
+                        }
+                      }
+                  - script: >
                       pipelineJob('Android/Builds/AAOS Builder') {
                         description('''
                           <br/><h3 style="margin-bottom: 10px;">Android Automotive Virtual Devices and Platform Targets Builder</h3>

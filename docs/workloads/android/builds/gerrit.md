@@ -10,7 +10,6 @@ It supports the following branches:
 -   `android-14.0.0_r30`
 -   `android-14.0.0_r74`
 -   `android-15.0.0_r4`
--   `android-15.0.0_r10`
 -   `android-15.0.0_r20`
 
 The branch is used to derive the full name (build identifier) of the build targets, e.g.
@@ -18,7 +17,6 @@ The branch is used to derive the full name (build identifier) of the build targe
 -   `android-14.0.0_r30` -> `sdk_car_x86_64-ap1a-userdebug`
 -   `android-14.0.0_r74` -> `sdk_car_x86_64-ap2a-userdebug`
 -   `android-15.0.0_r4` -> `sdk_car_x86_64-ap3a-userdebug`
--   `android-15.0.0_r10` -> `sdk_car_x86_64-ap4a-userdebug`
 -   `android-15.0.0_r20` -> `sdk_car_x86_64-bp1a-userdebug`
 
 It builds the following targets:
