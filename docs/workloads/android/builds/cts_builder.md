@@ -81,7 +81,7 @@ The minimum is 1 and the maximum is 24.
 
 ### `INSTANCE_RETENTION_TIME`
 
-Keep the build VM instance and container running to allow user to connect to it. Useful for debugging build issues, determining target output archives etc.
+Keep the build VM instance and container running to allow user to connect to it. Useful for debugging build issues, determining target output archives etc. Time in minutes.
 
 Access using `kubectl` e.g. `kubectl exec -it -n jenkins <pod name> -- bash` from `bastion` host.
 
