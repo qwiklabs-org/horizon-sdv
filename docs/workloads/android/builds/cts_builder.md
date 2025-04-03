@@ -54,17 +54,13 @@ Reference: [Codenames, tags, and build numbers](https://source.android.com/docs/
 Examples:
 
 - Virtual Devices:
-    -   `aosp_cf_x86_64_auto-userdebug`
     -   `aosp_cf_x86_64_auto-ap1a-userdebug`
     -   `aosp_cf_x86_64_auto-ap2a-userdebug`
     -   `aosp_cf_x86_64_auto-ap3a-userdebug`
-    -   `aosp_cf_x86_64_auto-ap4a-userdebug`
     -   `aosp_cf_x86_64_auto-bp1a-userdebug`
-    -   `aosp_cf_arm64_auto-userdebug`
     -   `aosp_cf_arm64_auto-ap1a-userdebug`
     -   `aosp_cf_arm64_auto-ap2a-userdebug`
     -   `aosp_cf_arm64_auto-ap3a-userdebug`
-    -   `aosp_cf_arm64_auto-ap4a-userdebug`
     -   `aosp_cf_arm64_auto-bp1a-userdebug`
 
 ### `AAOS_CLEAN`
