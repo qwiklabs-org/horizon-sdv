@@ -1,4 +1,4 @@
-# Android CTS Build
+# Android Builds
 
 ## Table of contents
 - [Introduction](#introduction)
@@ -6,13 +6,12 @@
 - [Environment Variables/Parameters](#environment-variables)
   * [Targets](#targets)
 - [System Variables](#system-variables)
-- [Known Issues](#known-issues)
 
 ## Introduction <a name="introduction"></a>
 
-This pipeline builds the Android Automotive Compatibility Test Suite ([CTS](https://source.android.com/docs/compatibility/cts)) test harness from the specified code base.
+This job is used to create pre-warmed persistent volumes with build caches used to improve performance for Android builds.
 
-The following are examples of the environment variables and Jenkins build parameters that can be used.
+Run the jobs in parallel to ensure each build job has clean persistent volume.
 
 ## Prerequisites<a name="prerequisites"></a>
 
@@ -20,6 +19,7 @@ One-time setup requirements.
 
 - Before running this pipeline job, ensure that the following template has been created by running the corresponding job:
   - Docker image template: `Android Workflows/Environment/Docker Image Template`
+- Ensure Persistent Volume Claims (PVCs) have been deleted.
 
 ## Environment Variables/Parameters <a name="environment-variables"></a>
 
@@ -45,49 +45,10 @@ The Android revision, i.e. branch or tag to build. Tested versions are below:
 - `android-15.0.0_r4` (ap3a)
 - `android-15.0.0_r20` (bp1a)
 
-### `AAOS_LUNCH_TARGET` <a name="targets"></a>
+### `ARCHIVE_ARTIFACTS`
 
-The Android cuttlefish target to build CTS from. Must be one of the `aosp_cf` targets.
+Option to archive the build artifacts to bucket.
 
-Reference: [Codenames, tags, and build numbers](https://source.android.com/docs/setup/reference/build-numbers)
-
-Examples:
-
-- Virtual Devices:
-    -   `aosp_cf_x86_64_auto-ap1a-userdebug`
-    -   `aosp_cf_x86_64_auto-ap2a-userdebug`
-    -   `aosp_cf_x86_64_auto-ap3a-userdebug`
-    -   `aosp_cf_x86_64_auto-bp1a-userdebug`
-    -   `aosp_cf_arm64_auto-ap1a-userdebug`
-    -   `aosp_cf_arm64_auto-ap2a-userdebug`
-    -   `aosp_cf_arm64_auto-ap3a-userdebug`
-    -   `aosp_cf_arm64_auto-bp1a-userdebug`
-
-### `AAOS_CLEAN`
-
-Option to clean the build workspace, either fully or simply for the `AAOS_LUNCH_TARGET` target defined.
-
-### `GERRIT_REPO_SYNC_JOBS`
-
-This is the value used for parallel jobs for `repo sync`, i.e. `-j <GERRIT_REPO_SYNC_JOBS>`.
-The default is defined in system environment variable: `REPO_SYNC_JOBS`.
-The minimum is 1 and the maximum is 24.
-
-### `INSTANCE_RETENTION_TIME`
-
-Keep the build VM instance and container running to allow user to connect to it. Useful for debugging build issues, determining target output archives etc. Time in minutes.
-
-Access using `kubectl` e.g. `kubectl exec -it -n jenkins <pod name> -- bash` from `bastion` host.
-
-### `AAOS_ARTIFACT_STORAGE_SOLUTION`
-
-Define storage solution used to push artifacts.
-
-Currently `GCS_BUCKET` default pushes to GCS bucket, if empty then nothing will be stored.
-
-### `GERRIT_PROJECT` / `GERRIT_CHANGE_NUMBER` / `GERRIT_PATCHSET_NUMBER`
-
-These are optional but allow the user to fetch a specific Gerrit patchset if required.
 
 ## SYSTEM VARIABLES <a name="system-variables"></a>
 
@@ -119,7 +80,7 @@ These are as follows:
     - The URL domain which is required by pipeline jobs to derive URL for tools and GCP.
 
 -   `JENKINS_CACHE_STORAGE_CLASS_NAME`
-    - This identifies the Persistent Volume Claim (PVC) that provisions persistent storage for build cache, ensuring efficient reuse of cached resources across builds. The default is [`pd-balanced`](https://cloud.google.com/compute/docs/disks/performance), which strikes a balance between optimal performance and cost-effectiveness.
+    - This identifies the Persistent Volume Claim (PVC) that provisions persistent storage for build cache, ensuring efficient reuse of cached resources across builds.  The default is [`pd-balanced`](https://cloud.google.com/compute/docs/disks/performance), which strikes a balance between optimal performance and cost-effectiveness.
 
 -   `JENKINS_SERVICE_ACCOUNT`
     - Service account to use for pipelines. Required to ensure correct roles and permissions for GCP resources.
@@ -127,7 +88,3 @@ These are as follows:
 -   `REPO_SYNC_JOBS`
     - Defines the number of parallel sync jobs when running `repo sync`. By default this is used by Gerrit build
       pipeline but also forms the default for `GERRIT_REPO_SYNC_JOBS` parameter in build jobs.
-
-## KNOWN ISSUES <a name="known-issues"></a>
-
-Refer to `docs/workloads/android/builds/aaos_builder.md` for details.
